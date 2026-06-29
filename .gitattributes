@@ -1,0 +1,7 @@
+# Normalise line endings to LF in the working tree on every platform. Without
+# this, the Windows CI runner checks files out with CRLF and gofumpt/goimports
+# flag the entire tree as unformatted.
+* text=auto eol=lf
+
+# Binary assets must never be line-ending normalised.
+*.png binary
