@@ -36,13 +36,47 @@ testdata/        fixture Godot projects + golden files
 A guard test (`internal/model`) enforces this to keep the dependency graph
 acyclic.
 
-## Build & test
+## Development
+
+Dev tooling and task running are managed with [mise](https://mise.jdx.dev).
+`mise install` provisions the pinned Go toolchain, `golangci-lint`, `gofumpt`,
+and `goimports`. Tasks (`mise tasks` to list):
 
 ```sh
-go build ./...
-go vet ./...
-go test ./...
+mise run build      # go build ./...
+mise run test       # go test ./...
+mise run test:race  # go test -race ./...
+mise run lint       # golangci-lint run ./... (whole repo)
+mise run fmt        # gofumpt + goimports, in place
+mise run fmt:check  # fail if anything is unformatted
+mise run ci         # fmt:check + lint + test:race — what CI gates on
 ```
+
+Without mise the same gates run directly:
+
+```sh
+go build ./... && go vet ./... && go test -race ./...
+golangci-lint run ./...
+```
+
+**Lint runs unscoped (whole repo) before every push**, not just changed files —
+some checks depend on repo-wide context. CI (`.github/workflows/ci.yml`) runs
+the same gates on a per-OS matrix (Linux, macOS, Windows) with `CGO_ENABLED=1`,
+because cgo rules out cross-compilation. `go vet` plus the model-purity guard
+test enforce the acyclic dependency direction.
+
+## Wails (milestone 03)
+
+The desktop UI is built with [Wails](https://wails.io). Before starting
+milestone 03, install the CLI and confirm the local toolchain:
+
+```sh
+go install github.com/wailsapp/wails/v2/cmd/wails@latest
+wails doctor   # must report a healthy environment (Go, npm, platform deps)
+```
+
+The buildable `ui/` skeleton is added in milestone 03; `mise run ui:dev` /
+`mise run ui:build` wrap `wails dev` / `wails build` once it exists.
 
 ## CLI
 

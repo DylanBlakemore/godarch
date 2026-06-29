@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# tree-sitter (milestone 01) needs cgo, which rules out effortless
+# cross-compilation — so every OS is built and tested on its own runner.
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    env:
+      CGO_ENABLED: "1"
+
+    # bash is present on all three runners (Git Bash on Windows); using it
+    # everywhere keeps the format-check one-liners portable.
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      # The Windows runner ships a gcc (mingw) on PATH, which cgo/tree-sitter
+      # needs; the Linux and macOS runners have their system toolchains.
+      - name: Show toolchain
+        run: |
+          go version
+          cc --version || gcc --version
+
+      - name: Install formatters
+        run: |
+          go install mvdan.cc/gofumpt@latest
+          go install golang.org/x/tools/cmd/goimports@latest
+
+      - name: Format check
+        run: |
+          test -z "$(gofumpt -l .)" || { echo 'gofumpt: files need formatting (run `mise run fmt`)'; gofumpt -l .; exit 1; }
+          test -z "$(goimports -l -local github.com/dylanblakemore/godarch .)" || { echo 'goimports: files need formatting (run `mise run fmt`)'; goimports -l -local github.com/dylanblakemore/godarch .; exit 1; }
+
+      # Install the pinned golangci-lint (v2) via the official script rather
+      # than the marketplace action, so the version matches mise.toml exactly
+      # and there is no action-vs-binary major-version skew to track.
+      - name: Install golangci-lint
+        run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b "$(go env GOPATH)/bin" v2.4.0
+
+      - name: Lint (whole repo)
+        run: "$(go env GOPATH)/bin/golangci-lint run ./..."
+
+      - name: Build
+        run: go build ./...
+
+      # `go vet` plus the model-purity guard test (internal/model/purity_test.go)
+      # are the import-cycle / dependency-direction guard called for in
+      # plan/00-foundation/01-repo-layout.md.
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test (race)
+        run: go test -race ./...

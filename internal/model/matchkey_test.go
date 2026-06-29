@@ -4,8 +4,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/dylanblakemore/godarch/internal/model"
 	"gopkg.in/yaml.v3"
+
+	"github.com/dylanblakemore/godarch/internal/model"
 )
 
 func TestMatchKeyConstructors(t *testing.T) {
