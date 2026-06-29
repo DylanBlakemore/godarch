@@ -259,7 +259,8 @@ func saveEdges(tx *sql.Tx, edges []*model.Edge) error {
 				return err
 			}
 			placeholders = append(placeholders, "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-			args = append(args,
+			args = append(
+				args,
 				string(e.Type), e.SourceID, e.TargetID, string(e.Origin),
 				boolToInt(e.Resolved), e.Confidence,
 				e.Evidence.File, e.Evidence.Line, e.Evidence.Snippet, properties,
@@ -288,7 +289,8 @@ func saveBoundaries(tx *sql.Tx, boundaries []*model.BoundaryPoint) error {
 				return err
 			}
 			placeholders = append(placeholders, "(?, ?, ?, ?, ?, ?, ?)")
-			args = append(args,
+			args = append(
+				args,
 				string(b.Direction), string(b.Type), b.NodeID, string(b.MatchKey),
 				b.Evidence.File, b.Evidence.Line, meta,
 			)
@@ -391,7 +393,8 @@ func (s *Store) loadEdges(p *model.Project) error {
 	rows, err := s.db.Query(
 		`SELECT type, source_id, target_id, origin, resolved, confidence,
 			ev_file, ev_line, ev_snippet, properties
-		 FROM edges ORDER BY id`)
+		 FROM edges ORDER BY id`,
+	)
 	if err != nil {
 		return err
 	}
@@ -429,7 +432,8 @@ func (s *Store) loadEdges(p *model.Project) error {
 func (s *Store) loadBoundaries(p *model.Project) error {
 	rows, err := s.db.Query(
 		`SELECT direction, type, node_id, match_key, ev_file, ev_line, meta
-		 FROM boundaries ORDER BY id`)
+		 FROM boundaries ORDER BY id`,
+	)
 	if err != nil {
 		return err
 	}

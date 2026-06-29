@@ -1,0 +1,61 @@
+# mise task runner & dev-tool versions (https://mise.jdx.dev).
+#
+# `mise install` provisions the pinned Go toolchain and dev tools; `mise tasks`
+# lists the targets below. Mirrors the archi workflow from
+# plan/00-foundation/04-tooling-ci.md.
+
+[tools]
+go = "1.25.3"
+golangci-lint = "2.4.0"
+"go:mvdan.cc/gofumpt" = "latest"
+"go:golang.org/x/tools/cmd/goimports" = "latest"
+
+[env]
+# tree-sitter (milestone 01) requires cgo; keep it on everywhere so local builds
+# match CI.
+CGO_ENABLED = "1"
+
+[tasks.build]
+description = "Compile all packages"
+run = "go build ./..."
+
+[tasks.test]
+description = "Run the test suite"
+run = "go test ./..."
+
+[tasks."test:race"]
+description = "Run the test suite with the race detector"
+run = "go test -race ./..."
+
+[tasks.lint]
+description = "Run golangci-lint over the whole repo (unscoped)"
+run = "golangci-lint run ./..."
+
+[tasks.fmt]
+description = "Format the tree with gofumpt + goimports"
+run = [
+  "gofumpt -w .",
+  "goimports -w -local github.com/dylanblakemore/godarch .",
+]
+
+[tasks."fmt:check"]
+description = "Fail if any file is not gofumpt/goimports-clean"
+run = [
+  'test -z "$(gofumpt -l .)"',
+  'test -z "$(goimports -l -local github.com/dylanblakemore/godarch .)"',
+]
+
+[tasks.ci]
+description = "Everything CI gates on: fmt-check + lint + race tests"
+depends = ["fmt:check", "lint", "test:race"]
+
+# Wails front-end tasks — wired up in milestone 03 once ui/ exists.
+[tasks."ui:dev"]
+description = "Run the Wails desktop app in dev mode (milestone 03)"
+dir = "ui"
+run = "wails dev"
+
+[tasks."ui:build"]
+description = "Build the Wails desktop app (milestone 03)"
+dir = "ui"
+run = "wails build"

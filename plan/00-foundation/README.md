@@ -39,9 +39,9 @@ milestones 01+ fast and safe to build.
 - [x] Identifier scheme documented and unit-tested (`02`)
 - [x] SQLite schema + migrations; `store.Save`/`store.Load` round-trip test (`03`)
 - [x] In-memory `gonum` graph builder from stored nodes/edges (`03`)
-- [ ] `mise`/`Taskfile` (or `make`) targets: build, test, lint, fmt (`04`)
-- [ ] CI matrix (macOS/Windows/Linux) green with cgo (`04`)
-- [ ] Wails toolchain installs and `wails doctor` passes (skeleton only) (`04`)
+- [x] `mise`/`Taskfile` (or `make`) targets: build, test, lint, fmt (`04`)
+- [ ] CI matrix (macOS/Windows/Linux) green with cgo (`04`) _(workflow committed; green confirmed on first push)_
+- [ ] Wails toolchain installs and `wails doctor` passes (skeleton only) (`04`) _(`wails doctor` documented; CLI install + `ui/` skeleton deferred to M3)_
 - [ ] Minimal fixture Godot project committed; loads without error (`05`)
 - [ ] Golden-test harness in place (`05`)
 - [ ] `godarch analyze testdata/fixtures/minimal` prints correct counts
