@@ -109,11 +109,11 @@ thin wrappers. Edge metadata (type/origin/confidence) is kept in a side map keye
 
 ## Tasks
 
-- [ ] Choose SQLite driver (recommend `modernc.org/sqlite`); add migration runner.
-- [ ] Implement the schema as migration `0001_init.sql`.
-- [ ] Implement `SaveProject`/`LoadProject` with a full round-trip test against a hand-built `Project`.
-- [ ] Implement `graph.Build` + `ForwardReach`/`ReverseReach`/`SCC`/`FanIn`/`FanOut` with tests on a toy graph.
-- [ ] Benchmark load + graph build on a large fixture (target: a 1k-file project < 1s to graph).
+- [x] Choose SQLite driver (recommend `modernc.org/sqlite`); add migration runner. _(chose `modernc.org/sqlite` — pure-Go, no extra cgo; embedded numbered-migration runner gated by `meta.schema_version`)_
+- [x] Implement the schema as migration `0001_init.sql`.
+- [x] Implement `SaveProject`/`LoadProject` with a full round-trip test against a hand-built `Project`. _(`Unresolved` is treated as the derived diagnostic subset of `Edges`, rebuilt on load from the `resolved` flag)_
+- [x] Implement `graph.Build` + `ForwardReach`/`ReverseReach`/`SCC`/`FanIn`/`FanOut` with tests on a toy graph. _(also `Project` projection + `Order`)_
+- [x] Benchmark load + graph build on a large fixture (target: a 1k-file project < 1s to graph). _(`BenchmarkLoadAndBuild`: 1k nodes / ~3k edges ≈ 7ms/op, well under target)_
 
 ## Definition of done
 
