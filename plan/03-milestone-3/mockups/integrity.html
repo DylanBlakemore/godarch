@@ -1,0 +1,145 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>godarch — integrity view</title><link rel="stylesheet" href="tokens.css"><script>document.documentElement.dataset.theme=location.search.indexOf('dark')>=0?'dark':'light';</script></head>
+<body><div class="page"><div class="frame">
+<style>
+.gi{--gd-blue:#3D7DB0;--gd-blue-strong:#1F5C8C;--mono:var(--font-mono);--sans:var(--font-sans);font-family:var(--sans);color:var(--text-primary);}
+.gi-rail{position:relative;}
+.gi-rail .spine{position:absolute;left:50%;transform:translateX(-50%);top:14px;bottom:14px;width:1.5px;background:var(--border-strong);}
+.gi-railitem{position:relative;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:8px;color:var(--text-muted);background:var(--surface-1);box-shadow:0 0 0 3px var(--surface-1);}
+.gi-railitem.on{background:var(--gd-blue);color:#fff;box-shadow:0 0 0 3px var(--surface-1);}
+.gi-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:20px;font-size:12px;border:0.5px solid var(--border);cursor:pointer;color:var(--text-secondary);}
+.gi-chip.on{background:var(--surface-2);border-color:var(--border-strong);color:var(--text-primary);}
+.gi-row:hover{background:var(--surface-1);}
+.gi-code{font-family:var(--mono);font-size:11px;line-height:1.7;background:var(--surface-0);border:0.5px solid var(--border);border-radius:8px;padding:9px 11px;overflow:hidden;}
+.gi-act{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:transparent;cursor:pointer;color:var(--text-secondary);}
+.gi-act.key{border-color:var(--gd-blue);color:var(--gd-blue-strong);}
+</style>
+<div class="gi">
+<div style="display:flex;flex-direction:column;border:0.5px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface-0);">
+
+  <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:0.5px solid var(--border);background:var(--surface-2);">
+    <span style="width:13px;height:13px;border:2px solid var(--gd-blue);transform:rotate(45deg);display:inline-block;flex:none;"></span>
+    <span style="font-family:var(--mono);font-weight:500;font-size:15px;letter-spacing:-0.02em;">godarch</span>
+    <span style="color:var(--text-muted);font-family:var(--mono);font-size:13px;">/</span>
+    <span style="font-family:var(--mono);font-size:13px;">integrity</span>
+    <div style="display:flex;align-items:center;gap:6px;margin-left:auto;color:var(--text-muted);font-size:13px;">
+      <i class="ti ti-search" style="font-size:15px;"></i>
+      <span style="font-family:var(--mono);font-size:11px;border:0.5px solid var(--border);border-radius:4px;padding:1px 5px;">⌘K</span>
+    </div>
+    <button style="display:flex;align-items:center;gap:6px;font-size:13px;"><i class="ti ti-refresh" style="font-size:15px;"></i>Re-scan</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:50px 1fr;min-height:480px;">
+
+    <nav class="gi-rail" style="border-right:0.5px solid var(--border);background:var(--surface-1);display:flex;flex-direction:column;align-items:center;gap:9px;padding:14px 0;">
+      <div class="spine"></div>
+      <div class="gi-railitem" aria-label="Overview"><i class="ti ti-layout-dashboard" style="font-size:16px;"></i></div>
+      <div class="gi-railitem on" aria-label="Integrity"><i class="ti ti-plug-connected" style="font-size:16px;"></i></div>
+      <div class="gi-railitem" aria-label="Graph"><i class="ti ti-topology-star-3" style="font-size:16px;"></i></div>
+      <div class="gi-railitem" aria-label="Domains"><i class="ti ti-category" style="font-size:16px;"></i></div>
+      <div class="gi-railitem" aria-label="Blast radius"><i class="ti ti-radar-2" style="font-size:16px;"></i></div>
+      <div class="gi-railitem" aria-label="Docs drift" style="opacity:.45;"><i class="ti ti-file-text" style="font-size:16px;"></i></div>
+    </nav>
+
+    <main style="padding:16px 18px;overflow:hidden;">
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.12em;color:var(--text-muted);margin-bottom:3px;">integrity</div>
+      <div style="font-size:18px;font-weight:500;margin-bottom:14px;">editor ↔ code report</div>
+
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:14px;">
+        <span class="gi-chip on">All 23</span>
+        <span class="gi-chip"><span style="width:7px;height:7px;border-radius:50%;background:var(--fill-danger);"></span>9 errors</span>
+        <span class="gi-chip"><span style="width:7px;height:7px;border-radius:50%;background:var(--fill-warning);"></span>11 warnings</span>
+        <span class="gi-chip"><span style="width:7px;height:7px;border-radius:50%;background:var(--text-muted);"></span>3 info</span>
+        <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border:0.5px solid var(--border);border-radius:var(--radius);font-family:var(--mono);font-size:12px;color:var(--text-secondary);">group by rule<i class="ti ti-chevron-down" style="font-size:14px;color:var(--text-muted);"></i></span>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 4px;border-top:0.5px solid var(--border);">
+        <i class="ti ti-chevron-down" style="font-size:16px;color:var(--text-secondary);"></i>
+        <span style="font-family:var(--mono);font-size:13px;">dangling_connection</span>
+        <span style="font-size:11px;padding:1px 8px;border-radius:20px;background:var(--bg-danger);color:var(--text-danger);">error · 4</span>
+        <span style="font-size:12px;color:var(--text-muted);margin-left:4px;">signal wired to a method that doesn't exist</span>
+      </div>
+
+      <div style="border:0.5px solid var(--border-danger);border-radius:12px;margin:6px 0 6px 26px;overflow:hidden;">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-danger);">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--fill-danger);flex:none;"></span>
+          <span style="font-family:var(--mono);font-size:12px;">level_01.tscn</span>
+          <span style="color:var(--text-danger);font-size:13px;">→ _on_door_opened()</span>
+          <i class="ti ti-chevron-up" style="font-size:16px;color:var(--text-secondary);margin-left:auto;"></i>
+        </div>
+
+        <div style="padding:12px;">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);align-items:stretch;">
+            <div>
+              <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:6px;">editor wiring · level_01.tscn:48</div>
+              <div class="gi-code">
+                <div style="color:var(--text-muted);">[connection]</div>
+                <div>signal = <span style="color:var(--gd-blue-strong);">"door_opened"</span></div>
+                <div>from = "Door"  to = "."</div>
+                <div style="background:var(--bg-danger);color:var(--text-danger);border-radius:4px;padding:0 3px;">method = "_on_door_opened"</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1.5px dashed var(--border-strong);">
+              <span style="width:22px;height:22px;border-radius:50%;background:var(--bg-danger);color:var(--text-danger);display:flex;align-items:center;justify-content:center;"><i class="ti ti-x" style="font-size:14px;"></i></span>
+            </div>
+            <div>
+              <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:6px;">code · door.gd → node "."</div>
+              <div class="gi-code">
+                <div style="background:var(--bg-danger);color:var(--text-danger);border-radius:4px;padding:0 3px;">✗ _on_door_opened  not defined</div>
+                <div style="color:var(--text-muted);margin-top:4px;">defined methods:</div>
+                <div>_ready()</div>
+                <div style="background:var(--bg-success);color:var(--text-success);border-radius:4px;padding:0 3px;">_on_door_open()  ← rename?</div>
+                <div>open()  close()</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-top:12px;padding:9px 11px;background:var(--surface-1);border-radius:8px;">
+            <i class="ti ti-bulb" style="font-size:15px;color:var(--text-secondary);margin-top:1px;"></i>
+            <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">The signal fires into nothing — a silent runtime no-op. <span style="color:var(--text-primary);">door.gd</span> defines <span style="font-family:var(--mono);">_on_door_open</span>; the connection likely predates a rename.</div>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+            <button class="gi-act key"><i class="ti ti-external-link" style="font-size:14px;"></i>Open in Godot</button>
+            <button class="gi-act"><i class="ti ti-file-code" style="font-size:14px;"></i>Open door.gd</button>
+            <button class="gi-act"><i class="ti ti-eye-off" style="font-size:14px;"></i>Ignore</button>
+            <button class="gi-act"><i class="ti ti-adjustments" style="font-size:14px;"></i>Override</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gi-row" style="display:flex;align-items:center;gap:10px;padding:8px 12px;margin-left:26px;border-radius:8px;">
+        <span style="width:7px;height:7px;border-radius:50%;background:var(--fill-danger);flex:none;"></span>
+        <span style="font-family:var(--mono);font-size:12px;">main_menu.tscn</span><span style="color:var(--text-secondary);font-size:13px;">→ _on_start_pressed()</span>
+        <i class="ti ti-chevron-down" style="font-size:15px;color:var(--text-muted);margin-left:auto;"></i>
+      </div>
+      <div class="gi-row" style="display:flex;align-items:center;gap:10px;padding:8px 12px;margin-left:26px;border-radius:8px;">
+        <span style="width:7px;height:7px;border-radius:50%;background:var(--fill-danger);flex:none;"></span>
+        <span style="font-family:var(--mono);font-size:12px;">boss_room.tscn</span><span style="color:var(--text-secondary);font-size:13px;">→ _on_phase_two()</span>
+        <i class="ti ti-chevron-down" style="font-size:15px;color:var(--text-muted);margin-left:auto;"></i>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 4px;margin-top:8px;border-top:0.5px solid var(--border);">
+        <i class="ti ti-chevron-right" style="font-size:16px;color:var(--text-secondary);"></i>
+        <span style="font-family:var(--mono);font-size:13px;">dead_export</span>
+        <span style="font-size:11px;padding:1px 8px;border-radius:20px;background:var(--bg-warning);color:var(--text-warning);">warning · 6</span>
+        <span style="font-size:12px;color:var(--text-muted);margin-left:4px;">@export never assigned in any scene</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 4px;border-top:0.5px solid var(--border);">
+        <i class="ti ti-chevron-right" style="font-size:16px;color:var(--text-secondary);"></i>
+        <span style="font-family:var(--mono);font-size:13px;">undefined_action</span>
+        <span style="font-size:11px;padding:1px 8px;border-radius:20px;background:var(--bg-danger);color:var(--text-danger);">error · 2</span>
+        <span style="font-size:12px;color:var(--text-muted);margin-left:4px;">input action used in code, absent from project.godot</span>
+      </div>
+      <div style="padding:9px 4px;font-family:var(--mono);font-size:11px;color:var(--text-muted);border-top:0.5px solid var(--border);">+ 5 more rule groups</div>
+    </main>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;padding:7px 14px;border-top:0.5px solid var(--border);background:var(--surface-2);font-family:var(--mono);font-size:11px;color:var(--text-muted);">
+    <i class="ti ti-circle-check" style="font-size:13px;color:var(--text-success);"></i>
+    <span>scanned 2m ago</span><span>·</span><span>23 findings across 12 rules</span>
+    <span style="margin-left:auto;">godarch.yml · 4 suppressed</span>
+  </div>
+
+</div>
+</div>
+</div></div></body></html>

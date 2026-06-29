@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>godarch — graph explorer</title><link rel="stylesheet" href="tokens.css"><script>document.documentElement.dataset.theme=location.search.indexOf('dark')>=0?'dark':'light';</script></head>
+<body><div class="page"><div class="frame">
+<style>
+.gx{--gd-blue:#3D7DB0;--gd-blue-strong:#1F5C8C;--mono:var(--font-mono);--sans:var(--font-sans);font-family:var(--sans);color:var(--text-primary);}
+.gx-rail{position:relative;}
+.gx-rail .spine{position:absolute;left:50%;transform:translateX(-50%);top:14px;bottom:14px;width:1.5px;background:var(--border-strong);}
+.gx-railitem{position:relative;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:8px;color:var(--text-muted);background:var(--surface-1);box-shadow:0 0 0 3px var(--surface-1);}
+.gx-railitem.on{background:var(--gd-blue);color:#fff;}
+.gx-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:var(--radius);font-size:12px;border:0.5px solid var(--border);color:var(--text-secondary);font-family:var(--mono);}
+.gx-leg{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary);font-family:var(--mono);}
+</style>
+<div class="gx">
+<div style="display:flex;flex-direction:column;border:0.5px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface-0);">
+
+  <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:0.5px solid var(--border);background:var(--surface-2);">
+    <span style="width:13px;height:13px;border:2px solid var(--gd-blue);transform:rotate(45deg);display:inline-block;flex:none;"></span>
+    <span style="font-family:var(--mono);font-weight:500;font-size:15px;letter-spacing:-0.02em;">godarch</span>
+    <span style="color:var(--text-muted);font-family:var(--mono);font-size:13px;">/</span>
+    <span style="font-family:var(--mono);font-size:13px;">graph</span>
+    <button style="display:flex;align-items:center;gap:6px;font-size:13px;margin-left:auto;"><i class="ti ti-refresh" style="font-size:15px;"></i>Re-scan</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:50px 1fr;min-height:480px;">
+
+    <nav class="gx-rail" style="border-right:0.5px solid var(--border);background:var(--surface-1);display:flex;flex-direction:column;align-items:center;gap:9px;padding:14px 0;">
+      <div class="spine"></div>
+      <div class="gx-railitem" aria-label="Overview"><i class="ti ti-layout-dashboard" style="font-size:16px;"></i></div>
+      <div class="gx-railitem" aria-label="Integrity"><i class="ti ti-plug-connected" style="font-size:16px;"></i></div>
+      <div class="gx-railitem on" aria-label="Graph"><i class="ti ti-topology-star-3" style="font-size:16px;"></i></div>
+      <div class="gx-railitem" aria-label="Domains"><i class="ti ti-category" style="font-size:16px;"></i></div>
+      <div class="gx-railitem" aria-label="Blast radius"><i class="ti ti-radar-2" style="font-size:16px;"></i></div>
+      <div class="gx-railitem" aria-label="Docs drift" style="opacity:.45;"><i class="ti ti-file-text" style="font-size:16px;"></i></div>
+    </nav>
+
+    <main style="padding:14px 16px;overflow:hidden;">
+
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:7px;padding:5px 10px;border:0.5px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);font-family:var(--mono);font-size:12px;">
+          <i class="ti ti-focus-2" style="font-size:14px;color:var(--gd-blue-strong);"></i>player.gd
+        </div>
+        <span class="gx-chip">kinds: all<i class="ti ti-chevron-down" style="font-size:13px;color:var(--text-muted);"></i></span>
+        <span class="gx-chip">origin: all<i class="ti ti-chevron-down" style="font-size:13px;color:var(--text-muted);"></i></span>
+        <span class="gx-chip">depth 1</span>
+        <div style="margin-left:auto;display:flex;gap:6px;">
+          <span class="gx-chip" style="padding:4px 7px;"><i class="ti ti-minus" style="font-size:14px;"></i></span>
+          <span class="gx-chip" style="padding:4px 7px;"><i class="ti ti-plus" style="font-size:14px;"></i></span>
+          <span class="gx-chip" style="padding:4px 7px;"><i class="ti ti-maximize" style="font-size:14px;"></i></span>
+        </div>
+      </div>
+
+      <div style="position:relative;border:0.5px solid var(--border);border-radius:12px;background:var(--surface-1);overflow:hidden;">
+        <svg viewBox="0 0 560 380" width="100%" role="img" style="display:block;">
+          <title>Neighborhood graph of player.gd</title>
+          <line x1="95" y1="90" x2="220" y2="205" stroke="#888780" stroke-width="1.5"/>
+          <line x1="220" y1="205" x2="420" y2="290" stroke="#888780" stroke-width="1.5"/>
+          <line x1="220" y1="205" x2="290" y2="320" stroke="#888780" stroke-width="1.5"/>
+          <line x1="220" y1="205" x2="130" y2="315" stroke="#888780" stroke-width="1.5"/>
+          <line x1="95" y1="90" x2="225" y2="62" stroke="#888780" stroke-width="1.5"/>
+          <line x1="220" y1="205" x2="70" y2="210" stroke="#BA7517" stroke-width="1.5"/>
+          <line x1="220" y1="205" x2="430" y2="210" stroke="#E24B4A" stroke-width="1.5" stroke-dasharray="5 4"/>
+
+          <path transform="translate(157,147) rotate(42.6)" d="M-6,-4 L3,0 L-6,4 Z" fill="#888780"/>
+          <path transform="translate(320,247) rotate(23)" d="M-6,-4 L3,0 L-6,4 Z" fill="#888780"/>
+          <path transform="translate(255,262) rotate(58.7)" d="M-6,-4 L3,0 L-6,4 Z" fill="#888780"/>
+          <path transform="translate(175,260) rotate(129.3)" d="M-6,-4 L3,0 L-6,4 Z" fill="#888780"/>
+          <path transform="translate(160,76) rotate(-12.1)" d="M-6,-4 L3,0 L-6,4 Z" fill="#888780"/>
+          <path transform="translate(145,207) rotate(178)" d="M-6,-4 L3,0 L-6,4 Z" fill="#BA7517"/>
+          <path transform="translate(325,207) rotate(1.4)" d="M-6,-4 L3,0 L-6,4 Z" fill="#E24B4A"/>
+
+          <g class="c-blue" transform="translate(95,90)"><rect x="-50" y="-14" width="100" height="28" rx="6"/><text text-anchor="middle" y="5" font-size="13" style="font-family:var(--mono)">Player.tscn</text></g>
+          <g class="c-blue" transform="translate(225,62)"><rect x="-50" y="-14" width="100" height="28" rx="6"/><text text-anchor="middle" y="5" font-size="13" style="font-family:var(--mono)">Weapon.tscn</text></g>
+          <g class="c-coral" transform="translate(420,290)"><rect x="-48" y="-14" width="96" height="28" rx="6"/><text text-anchor="middle" y="5" font-size="13" style="font-family:var(--mono)">GameState</text></g>
+          <g class="c-coral" transform="translate(290,320)"><rect x="-46" y="-14" width="92" height="28" rx="6"/><text text-anchor="middle" y="5" font-size="13" style="font-family:var(--mono)">EventBus</text></g>
+          <g class="c-teal" transform="translate(130,315)"><rect x="-32" y="-14" width="64" height="28" rx="6"/><text text-anchor="middle" y="5" font-size="13" style="font-family:var(--mono)">died</text></g>
+          <g class="c-gray" transform="translate(70,210)"><rect x="-30" y="-14" width="60" height="28" rx="6"/><text text-anchor="middle" y="5" font-size="13" style="font-family:var(--mono)">HUD</text></g>
+          <g class="c-amber" transform="translate(430,210)"><rect x="-32" y="-14" width="64" height="28" rx="6"/><text text-anchor="middle" y="5" font-size="13" style="font-family:var(--mono)">dash</text></g>
+
+          <rect x="173" y="187" width="94" height="36" rx="9" fill="none" stroke="#3D7DB0" stroke-width="2"/>
+          <g class="c-purple" transform="translate(220,205)"><rect x="-43" y="-14" width="86" height="28" rx="6"/><text text-anchor="middle" y="5" font-size="13" style="font-family:var(--mono)">player.gd</text></g>
+        </svg>
+
+        <div style="position:absolute;top:12px;right:12px;width:188px;background:var(--surface-2);border:0.5px solid var(--border);border-radius:10px;padding:11px 12px;">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px;">
+            <span style="font-size:10px;padding:1px 7px;border-radius:20px;background:var(--bg-pro);color:var(--text-pro);font-family:var(--mono);">script</span>
+            <i class="ti ti-x" style="font-size:14px;color:var(--text-muted);margin-left:auto;"></i>
+          </div>
+          <div style="font-family:var(--mono);font-size:14px;font-weight:500;">player.gd</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text-muted);margin-bottom:9px;">res://player/</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--text-secondary);padding:7px 0;border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);">6 methods · 2 signals · 3 exports</div>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.06em;color:var(--text-muted);margin:9px 0 5px;">out edges · 5</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-family:var(--mono);font-size:11px;">
+            <div style="display:flex;align-items:center;gap:6px;"><i class="ti ti-check" style="font-size:13px;color:var(--text-success);"></i><span style="color:var(--text-secondary);">autoload</span> GameState</div>
+            <div style="display:flex;align-items:center;gap:6px;"><i class="ti ti-check" style="font-size:13px;color:var(--text-success);"></i><span style="color:var(--text-secondary);">emits</span> died</div>
+            <div style="display:flex;align-items:center;gap:6px;"><i class="ti ti-alert-triangle" style="font-size:13px;color:var(--text-warning);"></i><span style="color:var(--text-secondary);">node</span> HUD</div>
+            <div style="display:flex;align-items:center;gap:6px;"><i class="ti ti-x" style="font-size:13px;color:var(--text-danger);"></i><span style="color:var(--text-secondary);">action</span> <span style="color:var(--text-danger);">"dash"</span></div>
+          </div>
+          <button style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:11px;font-size:12px;"><i class="ti ti-radar-2" style="font-size:14px;"></i>Blast radius</button>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:11px;">
+        <span class="gx-leg"><span style="width:9px;height:9px;border-radius:2px;background:#378ADD;"></span>scene</span>
+        <span class="gx-leg"><span style="width:9px;height:9px;border-radius:2px;background:#7F77DD;"></span>script</span>
+        <span class="gx-leg"><span style="width:9px;height:9px;border-radius:2px;background:#D85A30;"></span>autoload</span>
+        <span class="gx-leg"><span style="width:9px;height:9px;border-radius:2px;background:#1D9E75;"></span>signal</span>
+        <span class="gx-leg"><span style="width:9px;height:9px;border-radius:2px;background:#EF9F27;"></span>action</span>
+        <span class="gx-leg"><span style="width:9px;height:9px;border-radius:2px;background:#888780;"></span>node</span>
+        <span style="margin-left:auto;display:flex;gap:14px;">
+          <span class="gx-leg"><svg width="22" height="8"><line x1="0" y1="4" x2="22" y2="4" stroke="#888780" stroke-width="1.5"/></svg>resolved</span>
+          <span class="gx-leg"><svg width="22" height="8"><line x1="0" y1="4" x2="22" y2="4" stroke="#E24B4A" stroke-width="1.5" stroke-dasharray="5 4"/></svg>unresolved</span>
+        </span>
+      </div>
+
+    </main>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;padding:7px 14px;border-top:0.5px solid var(--border);background:var(--surface-2);font-family:var(--mono);font-size:11px;color:var(--text-muted);">
+    <i class="ti ti-topology-star-3" style="font-size:13px;"></i>
+    <span>focus: player.gd</span><span>·</span><span>7 neighbors</span><span>·</span><span>depth 1</span><span>·</span><span style="color:var(--text-warning);">1 unresolved edge</span>
+    <span style="margin-left:auto;">layout: force</span>
+  </div>
+
+</div>
+</div>
+</div></div></body></html>

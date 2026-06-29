@@ -1,0 +1,24 @@
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Go
+/bin/
+*.test
+*.out
+coverage.*
+
+# godarch local analysis DB
+.godarch.db
+*.godarch.db
+
+# build / dist output
+/build/
+/dist/
+
+# Wails frontend (added in M3)
+ui/node_modules/
+ui/frontend/dist/
+ui/build/bin/

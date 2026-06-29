@@ -1,0 +1,169 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>godarch — domains map (M4 preview)</title><link rel="stylesheet" href="tokens.css"><script>document.documentElement.dataset.theme=location.search.indexOf('dark')>=0?'dark':'light';</script></head>
+<body><div class="page"><div class="frame">
+<style>
+.gd{--gd-blue:#3D7DB0;--gd-blue-strong:#1F5C8C;--mono:var(--font-mono);--sans:var(--font-sans);font-family:var(--sans);color:var(--text-primary);}
+.gd-rail{position:relative;}
+.gd-rail .spine{position:absolute;left:50%;transform:translateX(-50%);top:14px;bottom:14px;width:1.5px;background:var(--border-strong);}
+.gd-railitem{position:relative;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:8px;color:var(--text-muted);background:var(--surface-1);box-shadow:0 0 0 3px var(--surface-1);}
+.gd-railitem.on{background:var(--gd-blue);color:#fff;}
+.gd-leg{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary);font-family:var(--mono);}
+</style>
+<div class="gd">
+<div style="display:flex;flex-direction:column;border:0.5px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface-0);">
+
+  <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:0.5px solid var(--border);background:var(--surface-2);">
+    <span style="width:13px;height:13px;border:2px solid var(--gd-blue);transform:rotate(45deg);display:inline-block;flex:none;"></span>
+    <span style="font-family:var(--mono);font-weight:500;font-size:15px;letter-spacing:-0.02em;">godarch</span>
+    <span style="color:var(--text-muted);font-family:var(--mono);font-size:13px;">/</span>
+    <span style="font-family:var(--mono);font-size:13px;">domains</span>
+    <span style="display:inline-flex;align-items:center;gap:6px;margin-left:8px;padding:4px 10px;border:0.5px solid var(--border);border-radius:var(--radius);font-family:var(--mono);font-size:12px;color:var(--text-secondary);">projection: directory<i class="ti ti-chevron-down" style="font-size:13px;color:var(--text-muted);"></i></span>
+    <button style="display:flex;align-items:center;gap:6px;font-size:13px;margin-left:auto;"><i class="ti ti-refresh" style="font-size:15px;"></i>Re-scan</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:50px 1fr;min-height:490px;">
+
+    <nav class="gd-rail" style="border-right:0.5px solid var(--border);background:var(--surface-1);display:flex;flex-direction:column;align-items:center;gap:9px;padding:14px 0;">
+      <div class="spine"></div>
+      <div class="gd-railitem" aria-label="Overview"><i class="ti ti-layout-dashboard" style="font-size:16px;"></i></div>
+      <div class="gd-railitem" aria-label="Integrity"><i class="ti ti-plug-connected" style="font-size:16px;"></i></div>
+      <div class="gd-railitem" aria-label="Graph"><i class="ti ti-topology-star-3" style="font-size:16px;"></i></div>
+      <div class="gd-railitem on" aria-label="Domains"><i class="ti ti-category" style="font-size:16px;"></i></div>
+      <div class="gd-railitem" aria-label="Blast radius"><i class="ti ti-radar-2" style="font-size:16px;"></i></div>
+      <div class="gd-railitem" aria-label="Docs drift" style="opacity:.45;"><i class="ti ti-file-text" style="font-size:16px;"></i></div>
+    </nav>
+
+    <main style="padding:14px 16px;overflow:hidden;">
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px;margin-bottom:11px;">
+        <div style="background:var(--surface-1);border-radius:var(--radius);padding:10px 12px;"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">Domains</div><div style="font-family:var(--mono);font-size:22px;font-weight:500;">7</div></div>
+        <div style="background:var(--surface-1);border-radius:var(--radius);padding:10px 12px;"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">Cross-domain edges</div><div style="font-family:var(--mono);font-size:22px;font-weight:500;">142</div></div>
+        <div style="background:var(--surface-1);border-radius:var(--radius);padding:10px 12px;"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">Cycles</div><div style="font-family:var(--mono);font-size:22px;font-weight:500;color:var(--text-danger);">2</div></div>
+        <div style="background:var(--surface-1);border-radius:var(--radius);padding:10px 12px;"><div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">Avg instability</div><div style="font-family:var(--mono);font-size:22px;font-weight:500;">0.46</div></div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:var(--radius);background:var(--bg-warning);margin-bottom:12px;">
+        <i class="ti ti-alert-triangle" style="font-size:15px;color:var(--text-warning);"></i>
+        <span style="font-size:12px;color:var(--text-warning);"><span style="font-family:var(--mono);">GameState</span> autoload spans 6 of 7 domains — a god-object pulling unrelated domains together.</span>
+      </div>
+
+      <div style="display:flex;gap:14px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:300px;">
+          <svg viewBox="0 0 334 300" width="100%" role="img" style="display:block;">
+            <title>Domain dependency structure matrix</title>
+            <text x="100.5" y="44" font-size="11" text-anchor="start" transform="rotate(-40 100.5 44)" style="font-family:var(--mono);fill:var(--text-secondary);">core</text>
+            <text x="135.5" y="44" font-size="11" text-anchor="start" transform="rotate(-40 135.5 44)" style="font-family:var(--mono);fill:var(--text-secondary);">player</text>
+            <text x="170.5" y="44" font-size="11" text-anchor="start" transform="rotate(-40 170.5 44)" style="font-family:var(--mono);fill:var(--text-secondary);">world</text>
+            <text x="205.5" y="44" font-size="11" text-anchor="start" transform="rotate(-40 205.5 44)" style="font-family:var(--mono);fill:var(--text-danger);">combat</text>
+            <text x="240.5" y="44" font-size="11" text-anchor="start" transform="rotate(-40 240.5 44)" style="font-family:var(--mono);fill:var(--text-secondary);">items</text>
+            <text x="275.5" y="44" font-size="11" text-anchor="start" transform="rotate(-40 275.5 44)" style="font-family:var(--mono);fill:var(--text-danger);">ui</text>
+            <text x="310.5" y="44" font-size="11" text-anchor="start" transform="rotate(-40 310.5 44)" style="font-family:var(--mono);fill:var(--text-secondary);">audio</text>
+
+            <text x="78" y="68" font-size="11" text-anchor="end" style="font-family:var(--mono);fill:var(--text-secondary);">core</text>
+            <text x="78" y="103" font-size="11" text-anchor="end" style="font-family:var(--mono);fill:var(--text-secondary);">player</text>
+            <text x="78" y="138" font-size="11" text-anchor="end" style="font-family:var(--mono);fill:var(--text-secondary);">world</text>
+            <text x="78" y="173" font-size="11" text-anchor="end" style="font-family:var(--mono);fill:var(--text-danger);">combat</text>
+            <text x="78" y="208" font-size="11" text-anchor="end" style="font-family:var(--mono);fill:var(--text-secondary);">items</text>
+            <text x="78" y="243" font-size="11" text-anchor="end" style="font-family:var(--mono);fill:var(--text-danger);">ui</text>
+            <text x="78" y="278" font-size="11" text-anchor="end" style="font-family:var(--mono);fill:var(--text-secondary);">audio</text>
+
+            <rect x="84" y="48" width="33" height="33" rx="4" fill="#D3D1C7"/><text x="100.5" y="68.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#5F5E5A;">9</text>
+            <rect x="119" y="48" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="154" y="48" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="189" y="48" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="224" y="48" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="259" y="48" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="294" y="48" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+
+            <rect x="84" y="83" width="33" height="33" rx="4" fill="#378ADD"/><text x="100.5" y="103.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#042C53;">8</text>
+            <rect x="119" y="83" width="33" height="33" rx="4" fill="#D3D1C7"/><text x="135.5" y="103.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#5F5E5A;">11</text>
+            <rect x="154" y="83" width="33" height="33" rx="4" fill="#85B7EB"/><text x="170.5" y="103.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#0C447C;">5</text>
+            <rect x="189" y="83" width="33" height="33" rx="4" fill="#85B7EB"/><text x="205.5" y="103.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#0C447C;">6</text>
+            <rect x="224" y="83" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="259" y="83" width="33" height="33" rx="4" fill="#B5D4F4"/><text x="275.5" y="103.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#0C447C;">3</text>
+            <rect x="294" y="83" width="33" height="33" rx="4" fill="#B5D4F4"/><text x="310.5" y="103.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#0C447C;">2</text>
+
+            <rect x="84" y="118" width="33" height="33" rx="4" fill="#378ADD"/><text x="100.5" y="138.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#042C53;">7</text>
+            <rect x="119" y="118" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="154" y="118" width="33" height="33" rx="4" fill="#D3D1C7"/><text x="170.5" y="138.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#5F5E5A;">8</text>
+            <rect x="189" y="118" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="224" y="118" width="33" height="33" rx="4" fill="#E24B4A"/><text x="240.5" y="138.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#fff;">4</text>
+            <rect x="259" y="118" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="294" y="118" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+
+            <rect x="84" y="153" width="33" height="33" rx="4" fill="#378ADD"/><text x="100.5" y="173.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#042C53;">9</text>
+            <rect x="119" y="153" width="33" height="33" rx="4" fill="#85B7EB"/><text x="135.5" y="173.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#0C447C;">4</text>
+            <rect x="154" y="153" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="189" y="153" width="33" height="33" rx="4" fill="#D3D1C7"/><text x="205.5" y="173.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#5F5E5A;">14</text>
+            <rect x="224" y="153" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="259" y="153" width="33" height="33" rx="4" fill="#E24B4A"/><text x="275.5" y="173.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#fff;">7</text>
+            <rect x="294" y="153" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+
+            <rect x="84" y="188" width="33" height="33" rx="4" fill="#85B7EB"/><text x="100.5" y="208.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#0C447C;">5</text>
+            <rect x="119" y="188" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="154" y="188" width="33" height="33" rx="4" fill="#E24B4A"/><text x="170.5" y="208.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#fff;">6</text>
+            <rect x="189" y="188" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="224" y="188" width="33" height="33" rx="4" fill="#D3D1C7"/><text x="240.5" y="208.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#5F5E5A;">6</text>
+            <rect x="259" y="188" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="294" y="188" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+
+            <rect x="84" y="223" width="33" height="33" rx="4" fill="#85B7EB"/><text x="100.5" y="243.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#0C447C;">6</text>
+            <rect x="119" y="223" width="33" height="33" rx="4" fill="#B5D4F4"/><text x="135.5" y="243.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#0C447C;">2</text>
+            <rect x="154" y="223" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="189" y="223" width="33" height="33" rx="4" fill="#E24B4A"/><text x="205.5" y="243.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#fff;">5</text>
+            <rect x="224" y="223" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="259" y="223" width="33" height="33" rx="4" fill="#D3D1C7"/><text x="275.5" y="243.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#5F5E5A;">12</text>
+            <rect x="294" y="223" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+
+            <rect x="84" y="258" width="33" height="33" rx="4" fill="#85B7EB"/><text x="100.5" y="278.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#0C447C;">4</text>
+            <rect x="119" y="258" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="154" y="258" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="189" y="258" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="224" y="258" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="259" y="258" width="33" height="33" rx="4" fill="none" stroke="var(--border)"/>
+            <rect x="294" y="258" width="33" height="33" rx="4" fill="#D3D1C7"/><text x="310.5" y="278.5" font-size="11" text-anchor="middle" style="font-family:var(--mono);fill:#5F5E5A;">5</text>
+          </svg>
+
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:8px;">
+            <span class="gd-leg">row depends on column</span>
+            <span class="gd-leg"><span style="width:11px;height:11px;border-radius:2px;background:#B5D4F4;"></span><span style="width:11px;height:11px;border-radius:2px;background:#85B7EB;"></span><span style="width:11px;height:11px;border-radius:2px;background:#378ADD;"></span>coupling</span>
+            <span class="gd-leg"><span style="width:11px;height:11px;border-radius:2px;background:#E24B4A;"></span>cycle</span>
+            <span class="gd-leg"><span style="width:11px;height:11px;border-radius:2px;background:#D3D1C7;"></span>members</span>
+          </div>
+        </div>
+
+        <div style="width:200px;background:var(--surface-2);border:0.5px solid var(--border);border-radius:10px;padding:12px;">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;">
+            <span style="width:9px;height:9px;border-radius:2px;background:#D85A30;"></span>
+            <span style="font-family:var(--mono);font-size:14px;font-weight:500;">combat</span>
+            <span style="margin-left:auto;font-size:10px;padding:1px 7px;border-radius:20px;background:var(--bg-danger);color:var(--text-danger);">in cycle</span>
+          </div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--text-secondary);padding-bottom:9px;border-bottom:0.5px solid var(--border);">Ca 5 · Ce 20 · 14 files</div>
+
+          <div style="margin-top:10px;font-family:var(--mono);font-size:11px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="color:var(--text-secondary);">instability</span><span>0.80</span></div>
+            <div style="height:6px;border-radius:3px;background:var(--bg-accent);margin-bottom:9px;"><div style="height:6px;border-radius:3px;width:80%;background:var(--text-danger);"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="color:var(--text-secondary);">cohesion</span><span>0.42</span></div>
+            <div style="height:6px;border-radius:3px;background:var(--bg-accent);"><div style="height:6px;border-radius:3px;width:42%;background:var(--text-warning);"></div></div>
+          </div>
+
+          <div style="margin-top:11px;padding-top:10px;border-top:0.5px solid var(--border);">
+            <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:6px;">sprawl</div>
+            <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;">14 files across 3 directories. Cycle <span style="font-family:var(--mono);color:var(--text-primary);">combat ⇄ ui</span> via 12 signal edges.</div>
+          </div>
+
+          <button style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:12px;font-size:12px;"><i class="ti ti-topology-star-3" style="font-size:14px;"></i>Show in graph</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;padding:7px 14px;border-top:0.5px solid var(--border);background:var(--surface-2);font-family:var(--mono);font-size:11px;color:var(--text-muted);">
+    <i class="ti ti-category" style="font-size:13px;"></i>
+    <span>7 domains</span><span>·</span><span>directory projection</span><span>·</span><span style="color:var(--text-danger);">2 cycles</span><span>·</span><span>Louvain refine available</span>
+    <span style="margin-left:auto;">resolved edges only</span>
+  </div>
+
+</div>
+</div>
+</div></div></body></html>

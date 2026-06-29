@@ -1,0 +1,64 @@
+/* godarch mockup design tokens — a standalone approximation of the Claude Design System
+   surface/role tokens, plus the godarch brand additions. Light + dark.
+   These let the mockup HTML files reference the same --surface/--text/--bg names the
+   real Wails frontend will consume. NOT production CSS — a fidelity prop for the PNGs. */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css');
+
+:root {
+  --page-bg:#e9e7df;
+  --surface-0:#efece4; --surface-1:#f7f5f0; --surface-2:#ffffff;
+  --text-primary:#1b1a16; --text-secondary:#56544d; --text-muted:#8a887f;
+  --text-danger:#A32D2D; --bg-danger:#FCEBEB; --fill-danger:#E24B4A; --border-danger:#F09595;
+  --text-warning:#854F0B; --bg-warning:#FAEEDA; --fill-warning:#EF9F27;
+  --text-success:#3B6D11; --bg-success:#EAF3DE; --fill-success:#639922;
+  --text-accent:#185FA5;  --bg-accent:#E6F1FB;
+  --text-pro:#3C3489;     --bg-pro:#EEEDFE;
+  --border:rgba(0,0,0,.10); --border-strong:rgba(0,0,0,.18);
+  --radius:8px;
+  --font-sans:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+
+[data-theme="dark"] {
+  --page-bg:#131210;
+  --surface-0:#1c1b18; --surface-1:#26251f; --surface-2:#302e27;
+  --text-primary:#f0eee6; --text-secondary:#b4b2a8; --text-muted:#86847b;
+  --text-danger:#F09595; --bg-danger:#3a1f1f; --fill-danger:#E24B4A; --border-danger:#7a3a3a;
+  --text-warning:#FAC775; --bg-warning:#3a2e16; --fill-warning:#EF9F27;
+  --text-success:#C0DD97; --bg-success:#1f3312; --fill-success:#639922;
+  --text-accent:#85B7EB;  --bg-accent:#15314f;
+  --text-pro:#CECBF6;     --bg-pro:#262159;
+  --border:rgba(255,255,255,.12); --border-strong:rgba(255,255,255,.22);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page-bg:#131210;
+    --surface-0:#1c1b18; --surface-1:#26251f; --surface-2:#302e27;
+    --text-primary:#f0eee6; --text-secondary:#b4b2a8; --text-muted:#86847b;
+    --text-danger:#F09595; --bg-danger:#3a1f1f; --fill-danger:#E24B4A; --border-danger:#7a3a3a;
+    --text-warning:#FAC775; --bg-warning:#3a2e16; --fill-warning:#EF9F27;
+    --text-success:#C0DD97; --bg-success:#1f3312; --fill-success:#639922;
+    --text-accent:#85B7EB;  --bg-accent:#15314f;
+    --text-pro:#CECBF6;     --bg-pro:#262159;
+    --border:rgba(255,255,255,.12); --border-strong:rgba(255,255,255,.22);
+  }
+}
+
+* { box-sizing:border-box; }
+body { margin:0; background:var(--page-bg); font-family:var(--font-sans); }
+.page { padding:36px 28px; background:var(--page-bg); min-height:100vh; }
+.frame { max-width:880px; margin:0 auto; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
+button { font-family:var(--font-sans); background:transparent; border:.5px solid var(--border-strong); border-radius:var(--radius); padding:5px 10px; color:var(--text-secondary); cursor:pointer; }
+button:hover { background:var(--surface-1); }
+
+/* categorical node-kind ramps for the graph explorer SVG (chip fill + readable text) */
+.c-blue rect{fill:#B5D4F4} .c-blue text{fill:#0C447C}
+.c-purple rect{fill:#CECBF6} .c-purple text{fill:#3C3489}
+.c-coral rect{fill:#F5C4B3} .c-coral text{fill:#712B13}
+.c-teal rect{fill:#9FE1CB} .c-teal text{fill:#085041}
+.c-gray rect{fill:#D3D1C7} .c-gray text{fill:#444441}
+.c-amber rect{fill:#FAC775} .c-amber text{fill:#633806}

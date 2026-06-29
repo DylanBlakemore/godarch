@@ -1,0 +1,128 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>godarch — blast radius</title><link rel="stylesheet" href="tokens.css"><script>document.documentElement.dataset.theme=location.search.indexOf('dark')>=0?'dark':'light';</script></head>
+<body><div class="page"><div class="frame">
+<style>
+.br{--gd-blue:#3D7DB0;--gd-blue-strong:#1F5C8C;--mono:var(--font-mono);--sans:var(--font-sans);font-family:var(--sans);color:var(--text-primary);}
+.br-rail{position:relative;}
+.br-rail .spine{position:absolute;left:50%;transform:translateX(-50%);top:14px;bottom:14px;width:1.5px;background:var(--border-strong);}
+.br-railitem{position:relative;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:8px;color:var(--text-muted);background:var(--surface-1);box-shadow:0 0 0 3px var(--surface-1);}
+.br-railitem.on{background:var(--gd-blue);color:#fff;}
+.br-tog{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;font-size:12px;font-family:var(--mono);border:none;cursor:pointer;color:var(--text-secondary);background:transparent;border-radius:6px;}
+.br-tog.on{background:var(--surface-2);color:var(--text-primary);box-shadow:0 0 0 0.5px var(--border-strong);}
+.br-leg{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary);font-family:var(--mono);}
+</style>
+<div class="br">
+<div style="display:flex;flex-direction:column;border:0.5px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface-0);">
+
+  <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:0.5px solid var(--border);background:var(--surface-2);">
+    <span style="width:13px;height:13px;border:2px solid var(--gd-blue);transform:rotate(45deg);display:inline-block;flex:none;"></span>
+    <span style="font-family:var(--mono);font-weight:500;font-size:15px;letter-spacing:-0.02em;">godarch</span>
+    <span style="color:var(--text-muted);font-family:var(--mono);font-size:13px;">/</span>
+    <span style="font-family:var(--mono);font-size:13px;">blast radius</span>
+    <div style="display:flex;align-items:center;gap:7px;margin-left:8px;padding:5px 10px;border:0.5px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-0);font-family:var(--mono);font-size:12px;">
+      <span style="width:8px;height:8px;border-radius:2px;background:#D85A30;"></span>GameState<i class="ti ti-chevron-down" style="font-size:13px;color:var(--text-muted);"></i>
+    </div>
+    <button style="display:flex;align-items:center;gap:6px;font-size:13px;margin-left:auto;"><i class="ti ti-refresh" style="font-size:15px;"></i>Re-scan</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:50px 1fr;min-height:500px;">
+
+    <nav class="br-rail" style="border-right:0.5px solid var(--border);background:var(--surface-1);display:flex;flex-direction:column;align-items:center;gap:9px;padding:14px 0;">
+      <div class="spine"></div>
+      <div class="br-railitem" aria-label="Overview"><i class="ti ti-layout-dashboard" style="font-size:16px;"></i></div>
+      <div class="br-railitem" aria-label="Integrity"><i class="ti ti-plug-connected" style="font-size:16px;"></i></div>
+      <div class="br-railitem" aria-label="Graph"><i class="ti ti-topology-star-3" style="font-size:16px;"></i></div>
+      <div class="br-railitem" aria-label="Domains"><i class="ti ti-category" style="font-size:16px;"></i></div>
+      <div class="br-railitem on" aria-label="Blast radius"><i class="ti ti-radar-2" style="font-size:16px;"></i></div>
+      <div class="br-railitem" aria-label="Docs drift" style="opacity:.45;"><i class="ti ti-file-text" style="font-size:16px;"></i></div>
+    </nav>
+
+    <main style="padding:14px 16px;overflow:hidden;">
+
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="display:inline-flex;padding:3px;border:0.5px solid var(--border);border-radius:8px;background:var(--surface-1);">
+          <button class="br-tog on"><i class="ti ti-arrow-back-up" style="font-size:14px;"></i>Impact</button>
+          <button class="br-tog">Dependencies</button>
+        </div>
+        <span style="font-size:12px;color:var(--text-secondary);">reverse reachability — what breaks if <span style="font-family:var(--mono);color:var(--text-primary);">GameState</span> changes</span>
+      </div>
+
+      <div style="display:flex;gap:14px;flex-wrap:wrap;">
+
+        <div style="flex:1;min-width:300px;">
+          <svg id="blastsvg" viewBox="0 0 400 384" width="100%" role="img" style="display:block;">
+            <title>Impact rings around GameState</title>
+            <circle cx="200" cy="196" r="60" fill="none" stroke="var(--border)" stroke-dasharray="3 4"/>
+            <circle cx="200" cy="196" r="115" fill="none" stroke="var(--border)" stroke-dasharray="3 4"/>
+            <circle cx="200" cy="196" r="165" fill="none" stroke="var(--border)" stroke-dasharray="3 4"/>
+            <g id="brdots"></g>
+            <g transform="translate(200,131)"><rect x="-22" y="-11" width="44" height="22" rx="11" fill="#E24B4A"/><text x="0" y="4" text-anchor="middle" font-size="12" style="font-family:var(--mono);fill:#fff;">84</text></g>
+            <g transform="translate(200,76)"><rect x="-24" y="-11" width="48" height="22" rx="11" fill="#EF9F27"/><text x="0" y="4" text-anchor="middle" font-size="12" style="font-family:var(--mono);fill:#412402;">142</text></g>
+            <g transform="translate(200,26)"><rect x="-22" y="-11" width="44" height="22" rx="11" fill="#85B7EB"/><text x="0" y="4" text-anchor="middle" font-size="12" style="font-family:var(--mono);fill:#042C53;">86</text></g>
+            <g transform="translate(200,196)"><rect x="-50" y="-16" width="100" height="32" rx="7" fill="#D85A30"/><text x="0" y="-1" text-anchor="middle" font-size="9" style="font-family:var(--mono);fill:#FAECE7;letter-spacing:0.06em;">autoload</text><text x="0" y="11" text-anchor="middle" font-size="13" style="font-family:var(--mono);fill:#fff;">GameState</text></g>
+          </svg>
+
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:6px;justify-content:center;">
+            <span class="br-leg"><span style="width:10px;height:10px;border-radius:50%;background:#E24B4A;"></span>1 hop</span>
+            <span class="br-leg"><span style="width:10px;height:10px;border-radius:50%;background:#EF9F27;"></span>2 hops</span>
+            <span class="br-leg"><span style="width:10px;height:10px;border-radius:50%;background:#85B7EB;"></span>3 hops</span>
+            <span class="br-leg" style="color:var(--text-muted);">closer = breaks first</span>
+          </div>
+        </div>
+
+        <div style="width:206px;">
+          <div style="background:var(--bg-danger);border-radius:10px;padding:12px;margin-bottom:10px;">
+            <div style="font-size:12px;color:var(--text-danger);margin-bottom:3px;">Nodes affected</div>
+            <div style="font-family:var(--mono);font-size:30px;font-weight:500;color:var(--text-danger);line-height:1;">312</div>
+            <div style="font-family:var(--mono);font-size:12px;color:var(--text-danger);margin-top:3px;">24% of project · all 7 domains</div>
+          </div>
+
+          <div style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:10px;padding:12px;">
+            <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:8px;">impact by domain</div>
+            <div style="display:flex;flex-direction:column;gap:7px;font-family:var(--mono);font-size:11px;">
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span>ui</span><span style="color:var(--text-secondary);">64</span></div><div style="height:5px;border-radius:3px;background:var(--bg-accent);"><div style="height:5px;border-radius:3px;width:100%;background:#D4537E;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span>combat</span><span style="color:var(--text-secondary);">58</span></div><div style="height:5px;border-radius:3px;background:var(--bg-accent);"><div style="height:5px;border-radius:3px;width:91%;background:#D85A30;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span>player</span><span style="color:var(--text-secondary);">47</span></div><div style="height:5px;border-radius:3px;background:var(--bg-accent);"><div style="height:5px;border-radius:3px;width:73%;background:#378ADD;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span>world</span><span style="color:var(--text-secondary);">41</span></div><div style="height:5px;border-radius:3px;background:var(--bg-accent);"><div style="height:5px;border-radius:3px;width:64%;background:#639922;"></div></div></div>
+              <div style="font-size:10px;color:var(--text-muted);">+ items 39 · audio 34 · core 29</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:8px;margin-top:10px;padding:9px 11px;border:0.5px solid var(--border);border-radius:10px;">
+            <i class="ti ti-arrow-forward-up" style="font-size:15px;color:var(--text-secondary);"></i>
+            <div style="font-size:12px;color:var(--text-secondary);">depends on only <span style="font-family:var(--mono);color:var(--text-primary);">3</span> nodes</div>
+          </div>
+
+          <button style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:10px;font-size:12px;"><i class="ti ti-topology-star-3" style="font-size:14px;"></i>Trace in graph</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;padding:7px 14px;border-top:0.5px solid var(--border);background:var(--surface-2);font-family:var(--mono);font-size:11px;color:var(--text-muted);">
+    <i class="ti ti-radar-2" style="font-size:13px;"></i>
+    <span>GameState</span><span>·</span><span style="color:var(--text-danger);">impact 312</span><span>·</span><span>depth 3</span><span>·</span><span>forward 3</span>
+    <span style="margin-left:auto;">reachability cached</span>
+  </div>
+
+</div>
+</div>
+</div></div>
+<script>
+(function(){
+  var g=document.getElementById('brdots');if(!g)return;
+  var cx=200,cy=196;
+  var rings=[{r:60,n:13,c:'#E24B4A',o:1},{r:115,n:20,c:'#EF9F27',o:0.92},{r:165,n:15,c:'#85B7EB',o:0.82}];
+  rings.forEach(function(ring,ri){
+    for(var i=0;i<ring.n;i++){
+      var a=(i/ring.n)*Math.PI*2 + ri*0.5 - Math.PI/2;
+      var rr=ring.r + (((i*7+ri*3)%5)-2)*6;
+      var x=cx+Math.cos(a)*rr, y=cy+Math.sin(a)*rr;
+      var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx',x.toFixed(1));c.setAttribute('cy',y.toFixed(1));
+      c.setAttribute('r','4');c.setAttribute('fill',ring.c);c.setAttribute('opacity',ring.o);
+      g.appendChild(c);
+    }
+  });
+})();
+</script></body></html>
