@@ -33,8 +33,8 @@ milestones 01+ fast and safe to build.
 
 ## Master checklist
 
-- [ ] Repo layout & module created; `go build ./...` passes (`01`)
-- [ ] Package boundaries documented and enforced (no import cycles) (`01`)
+- [x] Repo layout & module created; `go build ./...` passes (`01`)
+- [x] Package boundaries documented and enforced (no import cycles) (`01`)
 - [ ] `Node` / `Edge` / `BoundaryPoint` / `MatchKey` types + identifier helpers (`02`)
 - [ ] Identifier scheme documented and unit-tested (`02`)
 - [ ] SQLite schema + migrations; `store.Save`/`store.Load` round-trip test (`03`)

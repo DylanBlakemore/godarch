@@ -71,11 +71,11 @@ zero core logic of its own.
 
 ## Tasks
 
-- [ ] `go mod init`; commit `go.mod`, `.gitignore`, `LICENSE`, top-level `README.md`.
-- [ ] Create the package directories with a `doc.go` stating each package's responsibility.
-- [ ] Add `cmd/godarch/main.go` with a no-op `analyze` subcommand.
-- [ ] Add an import-cycle guard to CI (`go vet` + a check that `model` imports no `internal/*`).
-- [ ] Decide CLI framework (recommend `cobra` for subcommands; stdlib `flag` is fine for v0).
+- [x] `go mod init`; commit `go.mod`, `.gitignore`, `LICENSE`, top-level `README.md`.
+- [x] Create the package directories with a `doc.go` stating each package's responsibility.
+- [x] Add `cmd/godarch/main.go` with a no-op `analyze` subcommand.
+- [x] Add an import-cycle guard to CI (`go vet` + a check that `model` imports no `internal/*`). _(guard test in `internal/model/purity_test.go`; CI wiring lands in `04`)_
+- [x] Decide CLI framework (recommend `cobra` for subcommands; stdlib `flag` is fine for v0). _(stdlib dispatch chosen for v0 — zero deps; revisit when subcommands grow)_
 
 ## Definition of done
 
