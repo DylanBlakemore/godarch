@@ -48,11 +48,25 @@ entry: an input snippet/edge + the expected match key / resolved target / resolu
 
 ## Tasks
 
-- [ ] Build `testdata/fixtures/minimal/` (valid, loadable in Godot 4) + its `golden/`.
-- [ ] Build `testdata/fixtures/coupled/` with one instance of each M2 smell + `golden/findings.json`.
-- [ ] Implement the golden-diff test helper + `UPDATE_GOLDEN` regeneration.
-- [ ] Seed `matchkey_fixtures.yml` (filled out as M1/M2 land).
-- [ ] Document the "regenerate & review goldens" workflow in `plan/` or repo docs.
+- [x] Build `testdata/fixtures/minimal/` (valid, loadable in Godot 4) + its `golden/`. _(project.godot + main.tscn + player.gd (@export, signal, editor connection) + game_state.gd autoload + icon.svg asset + jump input action; `golden/nodes.json` pins discovery output)_
+- [ ] Build `testdata/fixtures/coupled/` with one instance of each M2 smell + `golden/findings.json`. _(deferred to M2: the smells (dangling connection, dead export, …) are only observable once the M1 extractors + M2 integrity engine exist; no analysis logic is in scope for 00. Lands with `plan/02-*`.)_
+- [x] Implement the golden-diff test helper + `UPDATE_GOLDEN` regeneration. _(`internal/golden.AssertJSON`: deterministic indented-JSON diff, regenerates on `UPDATE_GOLDEN=1`, creates parent dirs)_
+- [ ] Seed `matchkey_fixtures.yml` (filled out as M1/M2 land). _(the file already exists at `internal/model/testdata/matchkey_fixtures.yml` from `02`; further entries land with the extractors in M1/M2)_
+- [x] Document the "regenerate & review goldens" workflow in `plan/` or repo docs. _(see "Regenerating goldens" below)_
+
+## Regenerating goldens
+
+Golden files are committed ground truth. After an intentional change to discovery
+(or, later, extraction) output:
+
+```
+UPDATE_GOLDEN=1 go test ./...   # rewrites every golden/*.json in place
+git diff -- testdata             # review the change like a snapshot review
+```
+
+Commit the regenerated goldens only once the diff is understood and expected. A
+bare `go test ./...` (no env var) asserts against the committed goldens and fails
+on any drift.
 
 ## Definition of done
 
