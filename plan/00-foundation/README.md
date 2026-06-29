@@ -35,8 +35,8 @@ milestones 01+ fast and safe to build.
 
 - [x] Repo layout & module created; `go build ./...` passes (`01`)
 - [x] Package boundaries documented and enforced (no import cycles) (`01`)
-- [ ] `Node` / `Edge` / `BoundaryPoint` / `MatchKey` types + identifier helpers (`02`)
-- [ ] Identifier scheme documented and unit-tested (`02`)
+- [x] `Node` / `Edge` / `BoundaryPoint` / `MatchKey` types + identifier helpers (`02`)
+- [x] Identifier scheme documented and unit-tested (`02`)
 - [ ] SQLite schema + migrations; `store.Save`/`store.Load` round-trip test (`03`)
 - [ ] In-memory `gonum` graph builder from stored nodes/edges (`03`)
 - [ ] `mise`/`Taskfile` (or `make`) targets: build, test, lint, fmt (`04`)

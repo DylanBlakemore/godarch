@@ -1,0 +1,34 @@
+# Match-key ground truth (archi-style). Each entry feeds the corresponding
+# model.*Key constructor; `want` locks the normalized output. Editing this file
+# changes the normalization contract — TestMatchKeyFixtures enforces it.
+
+signal:
+  - { emitter: "Player", name: "died", want: "signal:Player:died" }
+  - { emitter: "", name: "ready", want: "signal:*:ready" }
+  - { emitter: "  CharacterBody2D  ", name: "  hit  ", want: "signal:CharacterBody2D:hit" }
+
+resource:
+  - { path: "player/player.tscn", want: "res:res://player/player.tscn" }
+  - { path: "res://ui//hud.tscn", want: "res:res://ui/hud.tscn" }
+  - { path: "./a/../b.tres", want: "res:res://b.tres" }
+  - { path: "res://assets/icon.png", want: "res:res://assets/icon.png" }
+
+action:
+  - { name: "jump", want: "action:jump" }
+  - { name: "  move_left  ", want: "action:move_left" }
+
+group:
+  - { name: "enemies", want: "group:enemies" }
+  - { name: "ui_focusable", want: "group:ui_focusable" }
+
+autoload:
+  - { name: "GameState", want: "autoload:GameState" }
+  - { name: "AudioManager", want: "autoload:AudioManager" }
+
+rpc:
+  - { class: "Net", method: "spawn", want: "rpc:Net:spawn" }
+  - { class: "", method: "ping", want: "rpc:*:ping" }
+
+nodepath:
+  - { expr: "../Enemy/Sprite", want: "nodepath:../Enemy/Sprite" }
+  - { expr: "%HealthBar", want: "nodepath:%HealthBar" }

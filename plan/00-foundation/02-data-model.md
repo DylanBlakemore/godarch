@@ -128,11 +128,11 @@ type Project struct {
 
 ## Tasks
 
-- [ ] Define all types above in `internal/model`.
-- [ ] Implement ID constructors + parsers (`model.ScriptID`, `model.SymbolID`, `model.SceneNodeID`, …) with tests.
-- [ ] Implement `MatchKey` constructors per the table, with a documented normalisation function each.
-- [ ] Round-trip serialization (JSON) test covering every Kind / EdgeType / BoundaryType.
-- [ ] A fixtures file (`testdata/matchkey_fixtures.yml`) locking expected match-key outputs — archi-style ground truth.
+- [x] Define all types above in `internal/model`.
+- [x] Implement ID constructors + parsers (`model.ScriptID`, `model.SymbolID`, `model.SceneNodeID`, …) with tests.
+- [x] Implement `MatchKey` constructors per the table, with a documented normalisation function each.
+- [x] Round-trip serialization (JSON) test covering every Kind / EdgeType / BoundaryType.
+- [x] A fixtures file (`testdata/matchkey_fixtures.yml`) locking expected match-key outputs — archi-style ground truth.
 
 ## Definition of done
 
