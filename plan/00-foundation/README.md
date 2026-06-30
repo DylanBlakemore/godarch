@@ -40,7 +40,7 @@ milestones 01+ fast and safe to build.
 - [x] SQLite schema + migrations; `store.Save`/`store.Load` round-trip test (`03`)
 - [x] In-memory `gonum` graph builder from stored nodes/edges (`03`)
 - [x] `mise`/`Taskfile` (or `make`) targets: build, test, lint, fmt (`04`)
-- [ ] CI matrix (macOS/Windows/Linux) green with cgo (`04`) _(workflow committed; green confirmed on first push)_
+- [x] CI matrix (macOS/Windows/Linux) green with cgo (`04`) _(workflow at `.github/workflows/ci.yml`; all three OS jobs green on `main` — run 28431852698)_
 - [ ] Wails toolchain installs and `wails doctor` passes (skeleton only) (`04`) _(`wails doctor` documented; CLI install + `ui/` skeleton deferred to M3)_
 - [x] Minimal fixture Godot project committed; loads without error (`05`)
 - [x] Golden-test harness in place (`05`)
