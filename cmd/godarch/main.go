@@ -7,9 +7,15 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
+
+	"github.com/dylanblakemore/godarch/internal/discovery"
+	"github.com/dylanblakemore/godarch/internal/model"
+	"github.com/dylanblakemore/godarch/internal/store"
 )
 
 func main() {
@@ -47,14 +53,67 @@ func run(args []string, stdout, stderr io.Writer) int {
 	}
 }
 
-// runAnalyze is a no-op placeholder in milestone 00: it validates arguments and
-// echoes the target, proving the plumbing without any analysis logic yet.
+// runAnalyze discovers a Godot project, persists the (milestone-00, nodes-only)
+// graph to a SQLite database, and prints a file-classification summary. It is
+// the thin orchestrator the plan calls for: discover → store → summarise.
 func runAnalyze(args []string, stdout, stderr io.Writer) int {
-	if len(args) < 1 {
+	fs := flag.NewFlagSet("analyze", flag.ContinueOnError)
+	fs.SetOutput(stderr)
+	dbPath := fs.String("db", "", "path to the SQLite database to write (default <project-dir>/.godarch.db)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	if fs.NArg() < 1 {
 		fmt.Fprintln(stderr, "godarch analyze: missing <project-dir> argument")
 		return 2
 	}
-	projectDir := args[0]
-	fmt.Fprintf(stdout, "godarch: analyze %s (not yet implemented)\n", projectDir)
+	projectDir := fs.Arg(0)
+
+	p, err := discovery.Discover(projectDir)
+	if err != nil {
+		fmt.Fprintf(stderr, "godarch analyze: discover %s: %v\n", projectDir, err)
+		return 1
+	}
+
+	dest := *dbPath
+	if dest == "" {
+		dest = filepath.Join(projectDir, ".godarch.db")
+	}
+	if err := saveProject(dest, p); err != nil {
+		fmt.Fprintf(stderr, "godarch analyze: %v\n", err)
+		return 1
+	}
+
+	printSummary(stdout, projectDir, dest, p)
 	return 0
+}
+
+// saveProject opens (creating) the SQLite database at dest and writes p.
+func saveProject(dest string, p *model.Project) error {
+	st, err := store.Open(dest)
+	if err != nil {
+		return fmt.Errorf("open store %s: %w", dest, err)
+	}
+	defer func() { _ = st.Close() }()
+	if err := st.SaveProject(p); err != nil {
+		return fmt.Errorf("save project: %w", err)
+	}
+	return nil
+}
+
+// printSummary writes the headline file-classification counts the milestone-00
+// deliverable specifies: scripts, scenes, resources, assets, autoloads.
+func printSummary(stdout io.Writer, projectDir, dest string, p *model.Project) {
+	c := discovery.Counts(p)
+	version := p.GodotVersion
+	if version == "" {
+		version = "unknown"
+	}
+	fmt.Fprintf(stdout, "godarch: analyzed %s (Godot %s)\n", projectDir, version)
+	fmt.Fprintf(stdout, "  scripts:   %d\n", c[model.KindScript])
+	fmt.Fprintf(stdout, "  scenes:    %d\n", c[model.KindScene])
+	fmt.Fprintf(stdout, "  resources: %d\n", c[model.KindResource])
+	fmt.Fprintf(stdout, "  assets:    %d\n", c[model.KindAsset])
+	fmt.Fprintf(stdout, "  autoloads: %d\n", c[model.KindAutoload])
+	fmt.Fprintf(stdout, "  database:  %s\n", dest)
 }

@@ -42,9 +42,9 @@ milestones 01+ fast and safe to build.
 - [x] `mise`/`Taskfile` (or `make`) targets: build, test, lint, fmt (`04`)
 - [ ] CI matrix (macOS/Windows/Linux) green with cgo (`04`) _(workflow committed; green confirmed on first push)_
 - [ ] Wails toolchain installs and `wails doctor` passes (skeleton only) (`04`) _(`wails doctor` documented; CLI install + `ui/` skeleton deferred to M3)_
-- [ ] Minimal fixture Godot project committed; loads without error (`05`)
-- [ ] Golden-test harness in place (`05`)
-- [ ] `godarch analyze testdata/fixtures/minimal` prints correct counts
+- [x] Minimal fixture Godot project committed; loads without error (`05`)
+- [x] Golden-test harness in place (`05`)
+- [x] `godarch analyze testdata/fixtures/minimal` prints correct counts
 
 ## Exit criteria
 
