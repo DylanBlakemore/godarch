@@ -1,54 +1,119 @@
 package discovery
 
 import (
+	"fmt"
 	"io/fs"
+	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/dylanblakemore/godarch/internal/config"
 	"github.com/dylanblakemore/godarch/internal/model"
 )
 
-// Discover walks the Godot project rooted at dir, classifies its files into
-// model nodes by extension, and parses project.godot for autoloads, input
-// actions, and the engine version.
+// Discover locates the Godot project containing dir, classifies its files into
+// model nodes by extension, parses project.godot (autoloads, input actions,
+// physics/render layers, global groups, engine version, main scene), builds the
+// uid↔path map, and pairs each asset with its .import sidecar.
 //
-// In milestone 00 discovery emits nodes only: edges and boundary points are the
-// job of the M1 extractors, so the returned Project's Edges/Boundaries are
-// empty. File paths are normalised to res:// IDs; engine sidecars (.import) and
-// the .godot cache directory are skipped.
+// Discovery emits nodes only: edges and boundary points are the job of the M1
+// extractors, so the returned Project's Edges/Boundaries are empty. File paths
+// are normalised to res:// IDs; .import sidecars are not nodes (they are paired
+// onto their asset), and the .godot cache, the VCS dir, and any godarch.yml
+// ignore globs are skipped.
 func Discover(dir string) (*model.Project, error) {
-	p := model.NewProject("res://")
-
-	cfg, err := loadProjectConfig(dir)
+	root, err := findRoot(dir)
 	if err != nil {
 		return nil, err
 	}
-	p.GodotVersion = cfg.godotVersion
 
-	if err := walkFiles(dir, p); err != nil {
+	cfg, err := config.Load(root)
+	if err != nil {
+		return nil, fmt.Errorf("load %s: %w", config.FileName, err)
+	}
+
+	pc, err := loadProjectConfig(root)
+	if err != nil {
 		return nil, err
 	}
-	addConfigNodes(p, cfg)
+
+	p := model.NewProject("res://")
+	p.GodotVersion = pc.godotVersion
+
+	imports, err := walkFiles(root, cfg, p)
+	if err != nil {
+		return nil, err
+	}
+	pairImports(p, imports)
+	if err := buildUIDMap(root, p, imports); err != nil {
+		return nil, err
+	}
+	addConfigNodes(p, pc)
+	setMainScene(p, pc)
 	return p, nil
 }
 
-// walkFiles classifies every regular file under dir into a node, skipping the
-// .godot cache directory, .import sidecars, project.godot itself, and any file
-// whose extension does not map to a known Kind.
-func walkFiles(dir string, p *model.Project) error {
-	return filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+// findRoot returns the project root: the directory containing project.godot. It
+// accepts dir as-is when project.godot lives there, otherwise it ascends toward
+// the filesystem root looking for one. If none is found dir is returned
+// unchanged, so discovery stays lenient on a directory that is not (yet) a
+// Godot project rather than failing outright.
+func findRoot(dir string) (string, error) {
+	if hasProjectGodot(dir) {
+		return dir, nil
+	}
+	abs, err := filepath.Abs(dir)
+	if err != nil {
+		return "", err
+	}
+	for d := abs; ; {
+		if hasProjectGodot(d) {
+			return d, nil
+		}
+		parent := filepath.Dir(d)
+		if parent == d {
+			return dir, nil
+		}
+		d = parent
+	}
+}
+
+// hasProjectGodot reports whether dir directly contains a project.godot file.
+func hasProjectGodot(dir string) bool {
+	info, err := os.Stat(filepath.Join(dir, "project.godot"))
+	return err == nil && !info.IsDir()
+}
+
+// walkFiles classifies every regular file under root into a node, applying the
+// ignore filter to both directories (pruned with SkipDir) and files. It returns
+// the project-root-relative slash paths of the .import sidecars it saw: those
+// are not nodes but are paired onto their assets and mined for uids.
+func walkFiles(root string, cfg config.Config, p *model.Project) ([]string, error) {
+	var imports []string
+	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
+
+		rel, err := filepath.Rel(root, path)
+		if err != nil {
+			return err
+		}
+		relSlash := filepath.ToSlash(rel)
+
 		if d.IsDir() {
-			if path != dir && skipDir(d.Name()) {
+			if path != root && cfg.IsIgnored(relSlash) {
 				return fs.SkipDir
 			}
 			return nil
 		}
 
 		name := d.Name()
-		if name == "project.godot" || strings.HasSuffix(name, ".import") {
+		if name == "project.godot" || cfg.IsIgnored(relSlash) {
+			return nil
+		}
+		if strings.HasSuffix(name, ".import") {
+			imports = append(imports, relSlash)
 			return nil
 		}
 
@@ -56,15 +121,43 @@ func walkFiles(dir string, p *model.Project) error {
 		if !ok {
 			return nil
 		}
-
-		rel, err := filepath.Rel(dir, path)
-		if err != nil {
-			return err
-		}
-		resPath := model.NormalizePath("res://" + filepath.ToSlash(rel))
+		resPath := model.NormalizePath("res://" + relSlash)
 		p.Nodes[resPath] = &model.Node{ID: resPath, Kind: kind, Path: resPath}
 		return nil
 	})
+	return imports, err
+}
+
+// pairImports records, on each asset node, the res:// path of its .import
+// sidecar. The sidecar itself is not a node; the M1.02 scene extractor turns the
+// pairing into the imports edge (with importer params parsed from the sidecar).
+func pairImports(p *model.Project, imports []string) {
+	for _, rel := range imports {
+		assetID := model.NormalizePath("res://" + strings.TrimSuffix(rel, ".import"))
+		n, ok := p.Nodes[assetID]
+		if !ok {
+			continue // sidecar whose asset was ignored or is missing on disk
+		}
+		if n.Identity == nil {
+			n.Identity = map[string]any{}
+		}
+		n.Identity["import"] = model.NormalizePath("res://" + rel)
+	}
+}
+
+// setMainScene records the project's main scene (application/run/main_scene) and
+// marks that scene node as the scene-flow root for later analyses.
+func setMainScene(p *model.Project, cfg projectConfig) {
+	if cfg.mainScene == "" {
+		return
+	}
+	p.MainScene = cfg.mainScene
+	if n, ok := p.Nodes[cfg.mainScene]; ok {
+		if n.Identity == nil {
+			n.Identity = map[string]any{}
+		}
+		n.Identity["main_scene"] = true
+	}
 }
 
 // addConfigNodes adds the concept nodes that come from project.godot rather than
@@ -90,15 +183,35 @@ func addConfigNodes(p *model.Project, cfg projectConfig) {
 			Identity: map[string]any{"name": name},
 		}
 	}
+	for _, name := range cfg.groups {
+		id := model.GroupID(name)
+		p.Nodes[id] = &model.Node{
+			ID:       id,
+			Kind:     model.KindGroup,
+			Identity: map[string]any{"name": name, "predeclared": true},
+		}
+	}
+	addLayerNodes(p, cfg.layers)
 }
 
-// skipDir reports whether a directory should not be descended into.
-func skipDir(name string) bool {
-	switch name {
-	case ".godot", ".git":
-		return true
-	default:
-		return false
+// addLayerNodes emits one layer:<index> node per distinct layer index, merging
+// the per-category names ([layer_names]'s 2d_physics/3d_render/… entries that
+// share an index) into the node's identity.
+func addLayerNodes(p *model.Project, layers []layerName) {
+	names := map[int]map[string]any{}
+	for _, l := range layers {
+		if names[l.index] == nil {
+			names[l.index] = map[string]any{}
+		}
+		names[l.index][l.category] = l.name
+	}
+	for idx, byCategory := range names {
+		id := model.LayerID(idx)
+		p.Nodes[id] = &model.Node{
+			ID:       id,
+			Kind:     model.KindLayer,
+			Identity: map[string]any{"index": idx, "names": byCategory},
+		}
 	}
 }
 

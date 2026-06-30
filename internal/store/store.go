@@ -197,6 +197,7 @@ func saveMeta(tx *sql.Tx, p *model.Project) error {
 	}{
 		{"project_root", p.Root},
 		{"godot_version", p.GodotVersion},
+		{"main_scene", p.MainScene},
 		{"uid_map", uidJSON},
 	}
 	for _, kv := range pairs {
@@ -346,6 +347,8 @@ func (s *Store) loadMeta(p *model.Project) error {
 			p.Root = value.String
 		case "godot_version":
 			p.GodotVersion = value.String
+		case "main_scene":
+			p.MainScene = value.String
 		case "uid_map":
 			m, err := unmarshalMap(value)
 			if err != nil {
