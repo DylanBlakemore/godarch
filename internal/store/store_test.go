@@ -7,6 +7,7 @@ import (
 
 	"github.com/dylanblakemore/godarch/internal/model"
 	"github.com/dylanblakemore/godarch/internal/store"
+	"github.com/dylanblakemore/godarch/internal/version"
 )
 
 // hand-built Project that exercises every Kind, EdgeType, and BoundaryType — the
@@ -127,6 +128,43 @@ func TestSaveProjectReplaces(t *testing.T) {
 	}
 	if got.Root != "res://small" {
 		t.Errorf("root = %q, want res://small", got.Root)
+	}
+}
+
+// TestSaveProjectWritesRunMeta confirms SaveProject records the run-level meta
+// the schema documents: the godarch version that produced the graph and a
+// non-empty analysed-at timestamp. These are diagnostic-only (not part of the
+// Project model) so they are read back through Meta, not LoadProject.
+func TestSaveProjectWritesRunMeta(t *testing.T) {
+	dbPath := filepath.Join(t.TempDir(), "test.godarch.db")
+	s, err := store.Open(dbPath)
+	if err != nil {
+		t.Fatalf("open: %v", err)
+	}
+	t.Cleanup(func() { _ = s.Close() })
+
+	if err := s.SaveProject(sampleProject()); err != nil {
+		t.Fatalf("save: %v", err)
+	}
+
+	gotVersion, ok, err := s.Meta("godarch_version")
+	if err != nil {
+		t.Fatalf("Meta(godarch_version): %v", err)
+	}
+	if !ok || gotVersion != version.Version {
+		t.Errorf("godarch_version = %q (ok=%v), want %q", gotVersion, ok, version.Version)
+	}
+
+	analyzedAt, ok, err := s.Meta("analyzed_at")
+	if err != nil {
+		t.Fatalf("Meta(analyzed_at): %v", err)
+	}
+	if !ok || analyzedAt == "" {
+		t.Errorf("analyzed_at = %q (ok=%v), want a non-empty timestamp", analyzedAt, ok)
+	}
+
+	if _, ok, _ := s.Meta("does_not_exist"); ok {
+		t.Errorf("Meta(does_not_exist) reported present")
 	}
 }
 

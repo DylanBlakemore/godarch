@@ -42,8 +42,8 @@ GDScript symbol *resolution* across files is M2 — M1 extracts what each file d
 - [x] tree-sitter-gdscript wired via cgo; grammar pinned (`03`) _(official runtime + vendored grammar C — see `03` notes)_
 - [x] GDScript extractor emits: extends, class_name, signals, calls, emits, connects, loads, autoload access, node reach, groups, actions, rpc, exports (`03`)
 - [x] Boundary points (ingress/egress) emitted for both extractors (`03`, `02`) _(code-origin types; `group_target` ingress deferred to M2)_
-- [ ] Graph assembled & persisted; CLI dump/query works (`04`)
-- [ ] Goldens pass for `minimal/` and `coupled/` (nodes/edges/boundaries) (`04`)
+- [x] Graph assembled & persisted; CLI dump/query works (`04`)
+- [x] Goldens pass for `minimal/` and `coupled/` (nodes/edges/boundaries) (`04`)
 
 ## Exit criteria
 

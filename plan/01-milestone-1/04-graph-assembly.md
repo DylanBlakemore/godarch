@@ -43,13 +43,13 @@ godarch stats [--json]
 
 ## Tasks
 
-- [ ] Implement the `Pipeline.Run` assembly (discovery → concurrent extract → merge).
-- [ ] Node de-dup/stub-enrichment logic with tests.
-- [ ] Wire `store.SaveProject`; write `meta`.
-- [ ] `godarch analyze` summary output (text + counts).
-- [ ] `godarch graph --file` and `godarch stats`.
-- [ ] End-to-end goldens for `minimal/` + `coupled/` (nodes/edges/boundaries).
-- [ ] Perf check on a mid-size real project.
+- [x] Implement the `Pipeline.Run` assembly (discovery → concurrent extract → merge). _(merge is sequential — extractors mutate the shared project in place; a goroutine worker pool is deferred until the extractors emit into per-file collections)_
+- [x] Node de-dup/stub-enrichment logic with tests.
+- [x] Wire `store.SaveProject`; write `meta`. _(adds godarch_version + analyzed_at; `store.Meta` reads run-level keys)_
+- [x] `godarch analyze` summary output (text + counts).
+- [x] `godarch graph --file` and `godarch stats`.
+- [x] End-to-end goldens for `minimal/` + `coupled/` (nodes/edges/boundaries).
+- [ ] Perf check on a mid-size real project. _(manual; needs a real project checkout — not runnable in this environment)_
 
 ## Definition of done
 

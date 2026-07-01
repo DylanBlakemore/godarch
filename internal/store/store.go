@@ -9,10 +9,12 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	_ "modernc.org/sqlite" // pure-Go SQLite driver; keeps the cgo surface limited to tree-sitter
 
 	"github.com/dylanblakemore/godarch/internal/model"
+	"github.com/dylanblakemore/godarch/internal/version"
 )
 
 // chunkSize bounds how many rows are buffered into a single multi-row INSERT.
@@ -46,6 +48,21 @@ func Open(path string) (*Store, error) {
 
 // Close releases the underlying database handle.
 func (s *Store) Close() error { return s.db.Close() }
+
+// Meta returns the value of a single meta key. The second result is false when
+// the key is absent. It exposes the run-level facts (godarch_version,
+// analyzed_at, schema_version, …) that are not part of the Project model.
+func (s *Store) Meta(key string) (string, bool, error) {
+	var value sql.NullString
+	err := s.db.QueryRow(`SELECT value FROM meta WHERE key = ?`, key).Scan(&value)
+	switch {
+	case err == sql.ErrNoRows:
+		return "", false, nil
+	case err != nil:
+		return "", false, fmt.Errorf("read meta %q: %w", key, err)
+	}
+	return value.String, true, nil
+}
 
 // migration is one embedded numbered .sql file.
 type migration struct {
@@ -199,6 +216,8 @@ func saveMeta(tx *sql.Tx, p *model.Project) error {
 		{"godot_version", p.GodotVersion},
 		{"main_scene", p.MainScene},
 		{"uid_map", uidJSON},
+		{"godarch_version", version.Version},
+		{"analyzed_at", time.Now().UTC().Format(time.RFC3339)},
 	}
 	for _, kv := range pairs {
 		if _, err := tx.Exec(

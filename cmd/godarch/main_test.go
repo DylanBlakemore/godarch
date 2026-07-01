@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
@@ -69,7 +70,7 @@ func TestRun(t *testing.T) {
 	}
 }
 
-func TestAnalyzeMinimalFixturePrintsCountsAndWritesDB(t *testing.T) {
+func TestAnalyzeMinimalFixturePrintsSummaryAndWritesDB(t *testing.T) {
 	dbPath := filepath.Join(t.TempDir(), "minimal.godarch.db")
 
 	var out, errBuf bytes.Buffer
@@ -79,12 +80,15 @@ func TestAnalyzeMinimalFixturePrintsCountsAndWritesDB(t *testing.T) {
 	}
 
 	got := out.String()
+	// The summary is the pipeline's, not discovery's: it names the per-kind and
+	// per-type breakdowns plus the boundary/unresolved/diagnostic tallies.
 	for _, want := range []string{
-		"scripts", "2",
-		"scenes", "1",
-		"resources", "0",
-		"assets", "1",
-		"autoloads", "1",
+		"nodes", "edges",
+		"script", "scene", "autoload",
+		"boundaries (ingress", "egress",
+		"unresolved edges",
+		"diagnostics",
+		"database:",
 		"4.2",
 	} {
 		if !strings.Contains(got, want) {
@@ -94,5 +98,113 @@ func TestAnalyzeMinimalFixturePrintsCountsAndWritesDB(t *testing.T) {
 
 	if info, err := os.Stat(dbPath); err != nil || info.Size() == 0 {
 		t.Errorf("expected non-empty db at %s (err: %v)", dbPath, err)
+	}
+}
+
+// analyzeToDB runs the pipeline over the minimal fixture into a fresh temp DB and
+// returns its path, so the graph/stats subcommands have a database to read.
+func analyzeToDB(t *testing.T) string {
+	t.Helper()
+	dbPath := filepath.Join(t.TempDir(), "minimal.godarch.db")
+	var out, errBuf bytes.Buffer
+	if code := run([]string{"analyze", "-db", dbPath, minimalFixture}, &out, &errBuf); code != 0 {
+		t.Fatalf("analyze code = %d, want 0 (stderr: %s)", code, errBuf.String())
+	}
+	return dbPath
+}
+
+func TestGraphPrintsNodeEdges(t *testing.T) {
+	dbPath := analyzeToDB(t)
+
+	var out, errBuf bytes.Buffer
+	code := run([]string{"graph", "-db", dbPath, "-file", "res://player.gd"}, &out, &errBuf)
+	if code != 0 {
+		t.Fatalf("graph code = %d, want 0 (stderr: %s)", code, errBuf.String())
+	}
+	got := out.String()
+	for _, want := range []string{"res://player.gd", "outbound", "inbound"} {
+		if !strings.Contains(got, want) {
+			t.Errorf("graph stdout missing %q\n%s", want, got)
+		}
+	}
+}
+
+func TestGraphJSONForKnownNode(t *testing.T) {
+	dbPath := analyzeToDB(t)
+
+	var out, errBuf bytes.Buffer
+	code := run([]string{"graph", "-db", dbPath, "-file", "res://player.gd", "-json"}, &out, &errBuf)
+	if code != 0 {
+		t.Fatalf("graph --json code = %d, want 0 (stderr: %s)", code, errBuf.String())
+	}
+	var v struct {
+		ID       string `json:"id"`
+		Outbound []any  `json:"outbound"`
+		Inbound  []any  `json:"inbound"`
+	}
+	if err := json.Unmarshal(out.Bytes(), &v); err != nil {
+		t.Fatalf("graph --json output is not valid JSON: %v\n%s", err, out.String())
+	}
+	if v.ID != "res://player.gd" {
+		t.Errorf("graph --json id = %q, want res://player.gd", v.ID)
+	}
+}
+
+func TestGraphMissingNodeErrors(t *testing.T) {
+	dbPath := analyzeToDB(t)
+
+	var out, errBuf bytes.Buffer
+	code := run([]string{"graph", "-db", dbPath, "-file", "res://nope.gd"}, &out, &errBuf)
+	if code != 1 {
+		t.Fatalf("graph code = %d, want 1", code)
+	}
+	if !strings.Contains(errBuf.String(), "not found") {
+		t.Errorf("graph stderr = %q, want substring %q", errBuf.String(), "not found")
+	}
+}
+
+func TestGraphWithoutFileErrors(t *testing.T) {
+	var out, errBuf bytes.Buffer
+	code := run([]string{"graph"}, &out, &errBuf)
+	if code != 2 {
+		t.Fatalf("graph code = %d, want 2", code)
+	}
+	if !strings.Contains(errBuf.String(), "--file") {
+		t.Errorf("graph stderr = %q, want substring %q", errBuf.String(), "--file")
+	}
+}
+
+func TestStatsPrintsTotals(t *testing.T) {
+	dbPath := analyzeToDB(t)
+
+	var out, errBuf bytes.Buffer
+	code := run([]string{"stats", "-db", dbPath}, &out, &errBuf)
+	if code != 0 {
+		t.Fatalf("stats code = %d, want 0 (stderr: %s)", code, errBuf.String())
+	}
+	for _, want := range []string{"nodes:", "edges:", "boundaries:", "unresolved:", "top fan-in:"} {
+		if !strings.Contains(out.String(), want) {
+			t.Errorf("stats stdout missing %q\n%s", want, out.String())
+		}
+	}
+}
+
+func TestStatsJSON(t *testing.T) {
+	dbPath := analyzeToDB(t)
+
+	var out, errBuf bytes.Buffer
+	code := run([]string{"stats", "-db", dbPath, "-json"}, &out, &errBuf)
+	if code != 0 {
+		t.Fatalf("stats --json code = %d, want 0 (stderr: %s)", code, errBuf.String())
+	}
+	var v struct {
+		Nodes    int   `json:"nodes"`
+		TopFanIn []any `json:"top_fan_in"`
+	}
+	if err := json.Unmarshal(out.Bytes(), &v); err != nil {
+		t.Fatalf("stats --json output is not valid JSON: %v\n%s", err, out.String())
+	}
+	if v.Nodes == 0 {
+		t.Errorf("stats --json reported 0 nodes for the minimal fixture")
 	}
 }

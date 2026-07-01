@@ -1,0 +1,111 @@
+[
+  {
+    "id": "action:jump",
+    "kind": "action",
+    "identity": {
+      "name": "jump"
+    }
+  },
+  {
+    "id": "autoload:GameState",
+    "kind": "autoload",
+    "identity": {
+      "enabled": true,
+      "name": "GameState",
+      "path": "res://game_state.gd"
+    }
+  },
+  {
+    "id": "class:Node",
+    "kind": "class",
+    "identity": {
+      "name": "Node"
+    }
+  },
+  {
+    "id": "res://art/icon.svg",
+    "kind": "asset",
+    "path": "res://art/icon.svg",
+    "identity": {
+      "import": "res://art/icon.svg.import"
+    }
+  },
+  {
+    "id": "res://game_state.gd",
+    "kind": "script",
+    "path": "res://game_state.gd",
+    "identity": {
+      "extends": "Node"
+    }
+  },
+  {
+    "id": "res://main.tscn",
+    "kind": "scene",
+    "path": "res://main.tscn",
+    "identity": {
+      "main_scene": true
+    }
+  },
+  {
+    "id": "res://main.tscn::.",
+    "kind": "scene_node",
+    "path": "res://main.tscn",
+    "line": 5,
+    "identity": {
+      "name": "Main",
+      "node_type": "Node",
+      "root": true,
+      "scene": "res://main.tscn",
+      "script": "res://player.gd"
+    }
+  },
+  {
+    "id": "res://main.tscn::Timer",
+    "kind": "scene_node",
+    "path": "res://main.tscn",
+    "line": 8,
+    "identity": {
+      "name": "Timer",
+      "node_type": "Timer",
+      "parent": ".",
+      "scene": "res://main.tscn"
+    }
+  },
+  {
+    "id": "res://player.gd",
+    "kind": "script",
+    "path": "res://player.gd",
+    "identity": {
+      "exports": [
+        "speed"
+      ],
+      "extends": "Node"
+    }
+  },
+  {
+    "id": "res://player.gd::_on_timer_timeout",
+    "kind": "method",
+    "path": "res://player.gd",
+    "line": 10,
+    "identity": {
+      "arity": 0,
+      "name": "_on_timer_timeout",
+      "return_type": "void",
+      "static": false,
+      "virtual": false
+    },
+    "properties": {
+      "complexity": 1
+    }
+  },
+  {
+    "id": "res://player.gd::signal:died",
+    "kind": "signal",
+    "path": "res://player.gd",
+    "line": 7,
+    "identity": {
+      "name": "died",
+      "script": "res://player.gd"
+    }
+  }
+]
