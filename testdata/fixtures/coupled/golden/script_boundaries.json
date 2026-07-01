@@ -1,0 +1,224 @@
+[
+  {
+    "direction": "egress",
+    "type": "node_reach",
+    "node_id": "res://player.gd",
+    "match_key": "nodepath:Body/Sprite",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 11
+    },
+    "meta": {
+      "path": "Body/Sprite"
+    }
+  },
+  {
+    "direction": "egress",
+    "type": "resource_load",
+    "node_id": "res://player.gd",
+    "match_key": "res:res://bullet.tscn",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 14
+    },
+    "meta": {
+      "via": "preload"
+    }
+  },
+  {
+    "direction": "ingress",
+    "type": "input_handler",
+    "node_id": "res://player.gd::_input",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 22
+    }
+  },
+  {
+    "direction": "ingress",
+    "type": "notification",
+    "node_id": "res://player.gd::_notification",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 27
+    }
+  },
+  {
+    "direction": "egress",
+    "type": "autoload_access",
+    "node_id": "res://player.gd::_on_fired",
+    "match_key": "autoload:GameState",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 32
+    }
+  },
+  {
+    "direction": "egress",
+    "type": "signal_emit",
+    "node_id": "res://player.gd::_on_fired",
+    "match_key": "signal:*:fired",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 33
+    },
+    "meta": {
+      "signal": "fired"
+    }
+  },
+  {
+    "direction": "ingress",
+    "type": "signal_handler",
+    "node_id": "res://player.gd::_on_fired",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 31
+    },
+    "meta": {
+      "method": "_on_fired"
+    }
+  },
+  {
+    "direction": "ingress",
+    "type": "lifecycle",
+    "node_id": "res://player.gd::_ready",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 17
+    },
+    "meta": {
+      "method": "_ready"
+    }
+  },
+  {
+    "direction": "egress",
+    "type": "signal_connect",
+    "node_id": "res://player.gd::_ready",
+    "match_key": "signal:*:fired",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 19
+    },
+    "meta": {
+      "signal": "fired"
+    }
+  },
+  {
+    "direction": "egress",
+    "type": "group_call",
+    "node_id": "res://player.gd::jump",
+    "match_key": "group:enemies",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 40
+    },
+    "meta": {
+      "group": "enemies"
+    }
+  },
+  {
+    "direction": "egress",
+    "type": "node_reach",
+    "node_id": "res://player.gd::jump",
+    "match_key": "nodepath:Body/Sprite",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 41
+    },
+    "meta": {
+      "path": "Body/Sprite"
+    }
+  },
+  {
+    "direction": "egress",
+    "type": "resource_load",
+    "node_id": "res://player.gd::jump",
+    "match_key": "res:res://level.tscn",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 38
+    }
+  },
+  {
+    "direction": "egress",
+    "type": "rpc_call",
+    "node_id": "res://player.gd::jump",
+    "match_key": "rpc:*:take_hit",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 43
+    },
+    "meta": {
+      "method": "take_hit"
+    }
+  },
+  {
+    "direction": "egress",
+    "type": "rpc_call",
+    "node_id": "res://player.gd::jump",
+    "match_key": "rpc:*:take_hit",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 42
+    },
+    "meta": {
+      "method": "take_hit"
+    }
+  },
+  {
+    "direction": "egress",
+    "type": "scene_change",
+    "node_id": "res://player.gd::jump",
+    "match_key": "res:res://level.tscn",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 39
+    }
+  },
+  {
+    "direction": "egress",
+    "type": "signal_emit",
+    "node_id": "res://player.gd::jump",
+    "match_key": "signal:*:fired",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 37
+    },
+    "meta": {
+      "signal": "fired"
+    }
+  },
+  {
+    "direction": "egress",
+    "type": "file_io",
+    "node_id": "res://player.gd::save_state",
+    "match_key": "res:user://save.dat",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 48
+    },
+    "meta": {
+      "path": "user://save.dat"
+    }
+  },
+  {
+    "direction": "egress",
+    "type": "autoload_access",
+    "node_id": "res://player.gd::take_hit",
+    "match_key": "autoload:GameState",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 53
+    }
+  },
+  {
+    "direction": "ingress",
+    "type": "rpc_endpoint",
+    "node_id": "res://player.gd::take_hit",
+    "match_key": "rpc:Player:take_hit",
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 52
+    }
+  }
+]

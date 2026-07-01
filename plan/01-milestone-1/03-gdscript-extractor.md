@@ -64,13 +64,31 @@ symbol node's properties — reproduces `gdradon`'s value without the Python dep
 
 ## Tasks
 
-- [ ] Wire tree-sitter-gdscript; smoke-test parse on `minimal/` scripts.
-- [ ] Author tree-sitter queries for declarations (class_name, extends, func, signal, @export, @rpc).
-- [ ] Implement the call-site detector registry for every reference row above.
-- [ ] Emit ingress/egress boundary points.
-- [ ] Cyclomatic complexity per func.
-- [ ] Mark dynamic/untyped targets as unresolved with evidence.
-- [ ] Goldens for `minimal/` + `coupled/` script edges & boundaries.
+- [x] Wire tree-sitter-gdscript; smoke-test parse on `minimal/` scripts.
+- [x] Author tree-sitter queries for declarations (class_name, extends, func, signal, @export, @rpc). _(Implemented as a single recursive CST walk rather than `.scm` queries — see "Implementation notes" below.)_
+- [x] Implement the call-site detector registry for every reference row above.
+- [x] Emit ingress/egress boundary points. _(All code-origin types; `group_target` ingress is cross-file and deferred to M2 resolve, mirroring how `binds_export` was deferred in 02.)_
+- [x] Cyclomatic complexity per func.
+- [x] Mark dynamic/untyped targets as unresolved with evidence.
+- [x] Goldens for `minimal/` + `coupled/` script edges & boundaries.
+
+## Implementation notes (deviations)
+
+- **Runtime binding.** The plan named `smacker/go-tree-sitter`; we use the official
+  `github.com/tree-sitter/go-tree-sitter@v0.24.0` instead. The PrestonKnopp grammar's Go module
+  cannot be fetched on any platform (a case-insensitive filename collision in its Swift bindings
+  makes the module zip invalid), so its generated C (`parser.c`/`scanner.c`/`tree_sitter/*.h`) is
+  **vendored** at commit `495cf07` under `internal/extract/gdscript/grammar/` with a ~20-line cgo
+  binding; the runtime stays a normal pinned dependency. The plan's intent ("wired via cgo; grammar
+  pinned") is met.
+- **Declarations via walk, not `.scm` queries.** The grammar models annotations inconsistently
+  (nested `annotations` for vars, sibling `annotation` for funcs) and complexity + call-site scoping
+  need an imperative walk regardless, so a single recursive walk is the single source of truth rather
+  than splitting logic between `.scm` files and Go.
+- **`method` node kind added.** `model.KindMethod` was added so functions become code-origin nodes
+  that carry complexity/arity and anchor boundaries.
+- The CLI is not wired to run the extractor yet — pipeline assembly is `04-graph-assembly.md`,
+  consistent with how `02` left `main.go`.
 
 ## Definition of done
 

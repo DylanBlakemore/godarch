@@ -81,8 +81,8 @@ func TestProjectJSONRoundTrip(t *testing.T) {
 }
 
 func TestEnumerationsAreComplete(t *testing.T) {
-	if len(model.AllKinds) != 13 {
-		t.Errorf("AllKinds has %d entries, want 13", len(model.AllKinds))
+	if len(model.AllKinds) != 14 {
+		t.Errorf("AllKinds has %d entries, want 14", len(model.AllKinds))
 	}
 	if len(model.AllEdgeTypes) != 25 {
 		t.Errorf("AllEdgeTypes has %d entries, want 25", len(model.AllEdgeTypes))

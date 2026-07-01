@@ -1,0 +1,163 @@
+[
+  {
+    "id": "class:CharacterBody2D",
+    "kind": "class",
+    "identity": {
+      "name": "CharacterBody2D"
+    }
+  },
+  {
+    "id": "class:Node",
+    "kind": "class",
+    "identity": {
+      "name": "Node"
+    }
+  },
+  {
+    "id": "class:Player",
+    "kind": "class",
+    "identity": {
+      "name": "Player",
+      "script": "res://player.gd"
+    }
+  },
+  {
+    "id": "res://game_state.gd::signal:score_changed",
+    "kind": "signal",
+    "path": "res://game_state.gd",
+    "line": 7,
+    "identity": {
+      "name": "score_changed",
+      "params": [
+        "value"
+      ],
+      "script": "res://game_state.gd"
+    }
+  },
+  {
+    "id": "res://player.gd::_input",
+    "kind": "method",
+    "path": "res://player.gd",
+    "line": 22,
+    "identity": {
+      "arity": 1,
+      "name": "_input",
+      "return_type": "void",
+      "static": false,
+      "virtual": true
+    },
+    "properties": {
+      "complexity": 2
+    }
+  },
+  {
+    "id": "res://player.gd::_notification",
+    "kind": "method",
+    "path": "res://player.gd",
+    "line": 27,
+    "identity": {
+      "arity": 1,
+      "name": "_notification",
+      "return_type": "void",
+      "static": false,
+      "virtual": true
+    },
+    "properties": {
+      "complexity": 1
+    }
+  },
+  {
+    "id": "res://player.gd::_on_fired",
+    "kind": "method",
+    "path": "res://player.gd",
+    "line": 31,
+    "identity": {
+      "arity": 1,
+      "name": "_on_fired",
+      "return_type": "void",
+      "static": false,
+      "virtual": false
+    },
+    "properties": {
+      "complexity": 1
+    }
+  },
+  {
+    "id": "res://player.gd::_ready",
+    "kind": "method",
+    "path": "res://player.gd",
+    "line": 17,
+    "identity": {
+      "arity": 0,
+      "name": "_ready",
+      "return_type": "void",
+      "static": false,
+      "virtual": true
+    },
+    "properties": {
+      "complexity": 1
+    }
+  },
+  {
+    "id": "res://player.gd::jump",
+    "kind": "method",
+    "path": "res://player.gd",
+    "line": 36,
+    "identity": {
+      "arity": 0,
+      "name": "jump",
+      "return_type": "void",
+      "static": false,
+      "virtual": false
+    },
+    "properties": {
+      "complexity": 1
+    }
+  },
+  {
+    "id": "res://player.gd::save_state",
+    "kind": "method",
+    "path": "res://player.gd",
+    "line": 47,
+    "identity": {
+      "arity": 0,
+      "name": "save_state",
+      "return_type": "void",
+      "static": false,
+      "virtual": false
+    },
+    "properties": {
+      "complexity": 1
+    }
+  },
+  {
+    "id": "res://player.gd::signal:fired",
+    "kind": "signal",
+    "path": "res://player.gd",
+    "line": 8,
+    "identity": {
+      "name": "fired",
+      "params": [
+        "weapon"
+      ],
+      "script": "res://player.gd"
+    }
+  },
+  {
+    "id": "res://player.gd::take_hit",
+    "kind": "method",
+    "path": "res://player.gd",
+    "line": 52,
+    "identity": {
+      "arity": 1,
+      "name": "take_hit",
+      "return_type": "void",
+      "rpc": true,
+      "static": false,
+      "virtual": false
+    },
+    "properties": {
+      "complexity": 1
+    }
+  }
+]
