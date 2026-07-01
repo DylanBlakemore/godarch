@@ -1,0 +1,23 @@
+; Engine configuration file.
+; "coupled" fixture: exercises every code-origin edge and boundary type so the
+; GDScript extractor golden covers DESIGN §3.2 / §4 end to end.
+
+config_version=5
+
+[application]
+
+config/name="Coupled"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.3", "Forward Plus")
+
+[autoload]
+
+GameState="*res://game_state.gd"
+
+[input]
+
+jump={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":32)
+]
+}

@@ -39,9 +39,9 @@ GDScript symbol *resolution* across files is M2 — M1 extracts what each file d
 - [x] `project.godot` parsed: autoloads, input map, layers, main scene, global groups (`01`)
 - [x] Scene/resource INI parser handles `.tscn`/`.tres`/`.import`/`plugin.cfg`/`.gdextension` (`02`)
 - [x] Scene extractor emits: instances, attaches_script, connections, groups, node-paths, asset refs (`02`) _(binds_export deferred to M2 — needs the code-side `@export` list)_
-- [ ] tree-sitter-gdscript wired via cgo; grammar pinned (`03`)
-- [ ] GDScript extractor emits: extends, class_name, signals, calls, emits, connects, loads, autoload access, node reach, groups, actions, rpc, exports (`03`)
-- [ ] Boundary points (ingress/egress) emitted for both extractors (`03`, `02`)
+- [x] tree-sitter-gdscript wired via cgo; grammar pinned (`03`) _(official runtime + vendored grammar C — see `03` notes)_
+- [x] GDScript extractor emits: extends, class_name, signals, calls, emits, connects, loads, autoload access, node reach, groups, actions, rpc, exports (`03`)
+- [x] Boundary points (ingress/egress) emitted for both extractors (`03`, `02`) _(code-origin types; `group_target` ingress deferred to M2)_
 - [ ] Graph assembled & persisted; CLI dump/query works (`04`)
 - [ ] Goldens pass for `minimal/` and `coupled/` (nodes/edges/boundaries) (`04`)
 

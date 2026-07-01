@@ -1,0 +1,69 @@
+[
+  {
+    "type": "extends",
+    "source_id": "res://game_state.gd",
+    "target_id": "class:Node",
+    "origin": "code",
+    "resolved": false,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://game_state.gd",
+      "line": 1
+    }
+  },
+  {
+    "type": "declares_signal",
+    "source_id": "res://player.gd",
+    "target_id": "res://player.gd::signal:died",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 7
+    }
+  },
+  {
+    "type": "exports_var",
+    "source_id": "res://player.gd",
+    "target_id": "res://player.gd::speed",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 4
+    },
+    "properties": {
+      "type": "int",
+      "var": "speed"
+    }
+  },
+  {
+    "type": "extends",
+    "source_id": "res://player.gd",
+    "target_id": "class:Node",
+    "origin": "code",
+    "resolved": false,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 1
+    }
+  },
+  {
+    "type": "emits_signal",
+    "source_id": "res://player.gd::_on_timer_timeout",
+    "target_id": "signal:*:died",
+    "origin": "code",
+    "resolved": false,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 11
+    },
+    "properties": {
+      "signal": "died"
+    }
+  }
+]

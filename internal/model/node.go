@@ -14,6 +14,7 @@ const (
 	KindGroup     Kind = "group"      // a node group
 	KindLayer     Kind = "layer"      // a collision layer
 	KindSignal    Kind = "signal"     // a signal declared in a script
+	KindMethod    Kind = "method"     // a function/method declared in a script
 	KindClass     Kind = "class"      // a class_name / built-in / native class
 	KindExtension Kind = "extension"  // a .gdextension and the classes it registers
 	KindDoc       Kind = "doc"        // a developer documentation file
@@ -24,7 +25,7 @@ const (
 var AllKinds = []Kind{
 	KindScript, KindScene, KindSceneNode, KindResource, KindAutoload,
 	KindAsset, KindAction, KindGroup, KindLayer, KindSignal,
-	KindClass, KindExtension, KindDoc,
+	KindMethod, KindClass, KindExtension, KindDoc,
 }
 
 // Node is a single entity in the dependency graph. It mirrors archi's generic

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "class:Node",
+    "kind": "class",
+    "identity": {
+      "name": "Node"
+    }
+  },
+  {
+    "id": "res://player.gd::_on_timer_timeout",
+    "kind": "method",
+    "path": "res://player.gd",
+    "line": 10,
+    "identity": {
+      "arity": 0,
+      "name": "_on_timer_timeout",
+      "return_type": "void",
+      "static": false,
+      "virtual": false
+    },
+    "properties": {
+      "complexity": 1
+    }
+  },
+  {
+    "id": "res://player.gd::signal:died",
+    "kind": "signal",
+    "path": "res://player.gd",
+    "line": 7,
+    "identity": {
+      "name": "died",
+      "script": "res://player.gd"
+    }
+  }
+]
