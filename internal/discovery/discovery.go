@@ -53,6 +53,12 @@ func Discover(dir string) (*model.Project, error) {
 	return p, nil
 }
 
+// Root returns the Godot project root for dir: the directory containing
+// project.godot, ascending from dir if a subdirectory was given. It is exported
+// so the pipeline can pass the same filesystem root to Discover and to the
+// extractors (which resolve res:// IDs back to files under it).
+func Root(dir string) (string, error) { return findRoot(dir) }
+
 // findRoot returns the project root: the directory containing project.godot. It
 // accepts dir as-is when project.godot lives there, otherwise it ascends toward
 // the filesystem root looking for one. If none is found dir is returned

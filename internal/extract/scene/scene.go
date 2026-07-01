@@ -1,6 +1,7 @@
 package scene
 
 import (
+	"bytes"
 	"fmt"
 	"io/fs"
 	"os"
@@ -507,13 +508,41 @@ func propStr(sec *Section, key string) string {
 	return ""
 }
 
-// parseFile reads and parses a res://-identified INI file under root.
+// parseFile reads and parses a res://-identified INI file under root. Godot's
+// binary resource formats (.scn/.res, and any .tscn/.tres re-saved as binary)
+// are not INI text: rather than let the parser silently yield an empty document
+// — dropping every instance/script/connection edge with no trace (M1 exit
+// criterion: nothing unparseable is lost silently) — parseFile detects the
+// binary magic and returns a document carrying a single explanatory diagnostic.
 func parseFile(root, resPath string) (*Document, error) {
 	data, err := os.ReadFile(fsPath(root, resPath))
 	if err != nil {
 		return nil, fmt.Errorf("read %s: %w", resPath, err)
 	}
+	if isBinaryGodot(data) {
+		return &Document{Diags: []Diagnostic{{
+			File: resPath,
+			Msg: "binary Godot resource format (RSRC/RSCC); no edges extracted — " +
+				"re-save as text (.tscn/.tres) or add Godot-assisted conversion",
+		}}}, nil
+	}
 	return Parse(resPath, data), nil
+}
+
+// godotBinaryMagics are the leading bytes of Godot's binary resource formats:
+// "RSRC" for an uncompressed binary scene/resource, "RSCC" for a compressed one.
+// Text scenes/resources begin with a "[gd_scene…]"/"[gd_resource…]" header, so
+// the magic cleanly distinguishes the two regardless of file extension.
+var godotBinaryMagics = [][]byte{[]byte("RSRC"), []byte("RSCC")}
+
+// isBinaryGodot reports whether data begins with a Godot binary-resource magic.
+func isBinaryGodot(data []byte) bool {
+	for _, magic := range godotBinaryMagics {
+		if bytes.HasPrefix(data, magic) {
+			return true
+		}
+	}
+	return false
 }
 
 // fsPath converts a res:// node ID back to its filesystem path under root.

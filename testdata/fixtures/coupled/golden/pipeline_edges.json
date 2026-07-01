@@ -1,0 +1,345 @@
+[
+  {
+    "type": "declares_signal",
+    "source_id": "res://game_state.gd",
+    "target_id": "res://game_state.gd::signal:score_changed",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://game_state.gd",
+      "line": 7
+    }
+  },
+  {
+    "type": "extends",
+    "source_id": "res://game_state.gd",
+    "target_id": "class:Node",
+    "origin": "code",
+    "resolved": false,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://game_state.gd",
+      "line": 1
+    }
+  },
+  {
+    "type": "attaches_script",
+    "source_id": "res://main.tscn::.",
+    "target_id": "res://player.gd",
+    "origin": "editor",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://main.tscn",
+      "line": 6
+    }
+  },
+  {
+    "type": "connects_signal",
+    "source_id": "res://main.tscn::Timer",
+    "target_id": "res://player.gd::_on_fired",
+    "origin": "editor",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://main.tscn",
+      "line": 14
+    },
+    "properties": {
+      "from": "Timer",
+      "method": "_on_fired",
+      "signal": "timeout",
+      "to": "."
+    }
+  },
+  {
+    "type": "declares_signal",
+    "source_id": "res://player.gd",
+    "target_id": "res://player.gd::signal:fired",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 8
+    }
+  },
+  {
+    "type": "exports_var",
+    "source_id": "res://player.gd",
+    "target_id": "res://player.gd::speed",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 5
+    },
+    "properties": {
+      "type": "int",
+      "var": "speed"
+    }
+  },
+  {
+    "type": "extends",
+    "source_id": "res://player.gd",
+    "target_id": "class:CharacterBody2D",
+    "origin": "code",
+    "resolved": false,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 2
+    }
+  },
+  {
+    "type": "in_group",
+    "source_id": "res://player.gd",
+    "target_id": "group:players",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 18
+    },
+    "properties": {
+      "group": "players"
+    }
+  },
+  {
+    "type": "loads_resource",
+    "source_id": "res://player.gd",
+    "target_id": "res:res://bullet.tscn",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 14
+    },
+    "properties": {
+      "via": "preload"
+    }
+  },
+  {
+    "type": "references_node",
+    "source_id": "res://player.gd",
+    "target_id": "nodepath:Body/Sprite",
+    "origin": "code",
+    "resolved": false,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 11
+    },
+    "properties": {
+      "path": "Body/Sprite"
+    }
+  },
+  {
+    "type": "calls",
+    "source_id": "res://player.gd::_input",
+    "target_id": "res://player.gd::jump",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 24
+    }
+  },
+  {
+    "type": "uses_action",
+    "source_id": "res://player.gd::_input",
+    "target_id": "action:jump",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 23
+    },
+    "properties": {
+      "action": "jump"
+    }
+  },
+  {
+    "type": "accesses_autoload",
+    "source_id": "res://player.gd::_on_fired",
+    "target_id": "autoload:GameState",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 32
+    }
+  },
+  {
+    "type": "emits_signal",
+    "source_id": "res://player.gd::_on_fired",
+    "target_id": "signal:*:fired",
+    "origin": "code",
+    "resolved": false,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 33
+    },
+    "properties": {
+      "signal": "fired"
+    }
+  },
+  {
+    "type": "connects_signal",
+    "source_id": "res://player.gd::_ready",
+    "target_id": "signal:*:fired",
+    "origin": "code",
+    "resolved": false,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 19
+    },
+    "properties": {
+      "signal": "fired"
+    }
+  },
+  {
+    "type": "calls",
+    "source_id": "res://player.gd::jump",
+    "target_id": "res://player.gd::save_state",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 44
+    }
+  },
+  {
+    "type": "calls_group",
+    "source_id": "res://player.gd::jump",
+    "target_id": "group:enemies",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 40
+    },
+    "properties": {
+      "group": "enemies"
+    }
+  },
+  {
+    "type": "changes_scene_to",
+    "source_id": "res://player.gd::jump",
+    "target_id": "res:res://level.tscn",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 39
+    }
+  },
+  {
+    "type": "emits_signal",
+    "source_id": "res://player.gd::jump",
+    "target_id": "signal:*:fired",
+    "origin": "code",
+    "resolved": false,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 37
+    },
+    "properties": {
+      "signal": "fired"
+    }
+  },
+  {
+    "type": "loads_resource",
+    "source_id": "res://player.gd::jump",
+    "target_id": "res:res://level.tscn",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 38
+    }
+  },
+  {
+    "type": "references_node",
+    "source_id": "res://player.gd::jump",
+    "target_id": "nodepath:Body/Sprite",
+    "origin": "code",
+    "resolved": false,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 41
+    },
+    "properties": {
+      "path": "Body/Sprite"
+    }
+  },
+  {
+    "type": "rpc_call",
+    "source_id": "res://player.gd::jump",
+    "target_id": "rpc:*:take_hit",
+    "origin": "code",
+    "resolved": false,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 42
+    },
+    "properties": {
+      "method": "take_hit"
+    }
+  },
+  {
+    "type": "rpc_call",
+    "source_id": "res://player.gd::jump",
+    "target_id": "rpc:*:take_hit",
+    "origin": "code",
+    "resolved": false,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 43
+    },
+    "properties": {
+      "method": "take_hit"
+    }
+  },
+  {
+    "type": "accesses_autoload",
+    "source_id": "res://player.gd::take_hit",
+    "target_id": "autoload:GameState",
+    "origin": "code",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 53
+    }
+  },
+  {
+    "type": "rpc_endpoint",
+    "source_id": "res://player.gd::take_hit",
+    "target_id": "rpc:Player:take_hit",
+    "origin": "code",
+    "resolved": false,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://player.gd",
+      "line": 52
+    }
+  }
+]
