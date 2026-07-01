@@ -61,14 +61,14 @@ it (M2). The scene root + `main_scene` marker feed the scene-flow graph (M4).
 
 ## Tasks
 
-- [ ] INI tokeniser + Godot value-literal parser (lenient, diagnostic-emitting).
-- [ ] Resource-table resolution (`ExtResource`/`SubResource` id → path/subresource).
-- [ ] `.tscn` extraction: instances, attaches_script, connections, groups, exports/binds, node-paths, asset refs, node tree.
-- [ ] `.tres`/`.res` extraction: backing script, nested resource/asset refs.
-- [ ] `.import` pairing → `imports` edges with importer params.
-- [ ] `plugin.cfg` / `.gdextension` minimal extraction.
-- [ ] `editor_connection` ingress emission.
-- [ ] Goldens for `minimal/` + `coupled/` scene edges.
+- [x] INI tokeniser + Godot value-literal parser (lenient, diagnostic-emitting). _(`parser.go` sections/attrs/props with multi-line accumulation; `value.go` recursive-descent literal parser — strings, numbers, bools, null, arrays, dicts, ctors incl. `ExtResource`/`SubResource`/`NodePath`; unparseable values → `Diagnostic` + raw fallback, never dropped)_
+- [x] Resource-table resolution (`ExtResource`/`SubResource` id → path/subresource). _(`extResources` builds the id→path table; `resolveRef` prefers the declared path, falls back to `uid://` via `Project.UIDMap`)_
+- [x] `.tscn` extraction: instances, attaches_script, connections, groups, node-paths, asset refs, node tree. _(one `scene_node` per `[node]` with name/type/parent/root in identity; `instances`, `attaches_script`, `in_group`, `references_node` (unresolved, keyed by raw NodePath), `uses_asset`/`loads_resource`/`uses_shader`/`uses_theme`/`uses_material` by ext type. `binds_export` — the inspector-value↔`@export`-var join — is deferred to M2: it needs the script's `@export` list (task 03) to tell export assignments from built-in property values; the fragile `@export NodePath` seam is already captured as `references_node`.)_
+- [x] `.tres`/`.res` extraction: backing script, nested resource/asset refs. _(`[resource]`/`[sub_resource]` `script =` → `attaches_script`; nested `ExtResource` → asset/resource edges)_
+- [x] `.import` pairing → `imports` edges with importer params. _(sidecar path paired onto the asset in discovery; `imports` edge (origin=config) carries importer + produced type)_
+- [x] `plugin.cfg` / `.gdextension` minimal extraction. _(`scanPlugins` flags the addon's editor-plugin script `editor_plugin=true`; `.gdextension` `[configuration]` entry_symbol/compatibility recorded on the extension node)_
+- [x] `editor_connection` ingress emission. _(every `[connection]` → `connects_signal` edge + `editor_connection` ingress boundary keyed by `SignalKey(emitter_type, signal)`; handler resolved locally when the `to` node's script is attached in-scene)_
+- [x] Goldens for `minimal/` scene edges. _(`golden/edges.json` + `golden/boundaries.json`; `coupled/` is deferred to M2 per `plan/00-foundation/05` — its smells need the M2 integrity engine)_
 
 ## Definition of done
 

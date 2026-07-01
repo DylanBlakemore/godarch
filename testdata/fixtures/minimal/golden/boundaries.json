@@ -1,0 +1,18 @@
+[
+  {
+    "direction": "ingress",
+    "type": "editor_connection",
+    "node_id": "res://player.gd::_on_timer_timeout",
+    "match_key": "signal:Timer:timeout",
+    "evidence": {
+      "file": "res://main.tscn",
+      "line": 10
+    },
+    "meta": {
+      "from": "Timer",
+      "method": "_on_timer_timeout",
+      "signal": "timeout",
+      "to": "."
+    }
+  }
+]
