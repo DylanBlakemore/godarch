@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/dylanblakemore/godarch/internal/model"
@@ -20,18 +21,36 @@ type autoload struct {
 	enabled bool   // a leading "*" marks the singleton as enabled
 }
 
-// projectConfig holds the slice of project.godot that milestone-00 discovery
-// understands: the engine version, autoload singletons, and input-action names.
+// layerName is one [layer_names] entry: a category (e.g. "2d_physics",
+// "3d_render"), the 1-based layer index, and the user-assigned name.
+type layerName struct {
+	category string
+	index    int
+	name     string
+}
+
+// projectConfig holds the slice of project.godot that discovery understands: the
+// engine version, the main scene, autoload singletons, input-action names,
+// physics/render layer names, and predeclared global groups.
 type projectConfig struct {
 	godotVersion string
+	mainScene    string
 	autoloads    []autoload
 	actions      []string
+	layers       []layerName
+	groups       []string
 }
 
 // keyValRe matches a section key assignment at column 0 ("name=..."). Anchoring
 // to the line start excludes the indented/quoted continuation lines of Godot's
-// multi-line dictionary values (e.g. the body of an [input] action).
-var keyValRe = regexp.MustCompile(`^([A-Za-z_][A-Za-z0-9_/]*)\s*=(.*)$`)
+// multi-line dictionary values (e.g. the body of an [input] action). The leading
+// character allows a digit so layer keys like "2d_physics/layer_1" match;
+// continuation lines start with a quote or bracket and so still do not.
+var keyValRe = regexp.MustCompile(`^([A-Za-z0-9_][A-Za-z0-9_/]*)\s*=(.*)$`)
+
+// layerKeyRe splits a [layer_names] key into its category and 1-based index,
+// e.g. "2d_physics/layer_3" → ("2d_physics", 3).
+var layerKeyRe = regexp.MustCompile(`^(\w+)/layer_(\d+)$`)
 
 // versionTokenRe finds a Godot version token like "4.2" inside config/features.
 var versionTokenRe = regexp.MustCompile(`"(\d+\.\d+(?:\.\d+)?)"`)
@@ -68,12 +87,17 @@ func loadProjectConfig(dir string) (projectConfig, error) {
 		}
 		key, val := m[1], strings.TrimSpace(m[2])
 
-		// config/features carries the engine version; it lives under
-		// [application] but is matched by key so section drift won't hide it.
-		if key == "config/features" {
+		// config/features carries the engine version and run/main_scene the
+		// scene-flow root; both live under [application] but are matched by key
+		// so section drift won't hide them.
+		switch key {
+		case "config/features":
 			if t := versionTokenRe.FindStringSubmatch(val); t != nil {
 				cfg.godotVersion = t[1]
 			}
+			continue
+		case "run/main_scene":
+			cfg.mainScene = model.NormalizePath(strings.Trim(val, `"`))
 			continue
 		}
 
@@ -82,6 +106,20 @@ func loadProjectConfig(dir string) (projectConfig, error) {
 			cfg.autoloads = append(cfg.autoloads, parseAutoload(key, val))
 		case "input":
 			cfg.actions = append(cfg.actions, key)
+		case "layer_names":
+			if m := layerKeyRe.FindStringSubmatch(key); m != nil {
+				idx, err := strconv.Atoi(m[2])
+				if err != nil {
+					continue
+				}
+				cfg.layers = append(cfg.layers, layerName{
+					category: m[1],
+					index:    idx,
+					name:     strings.Trim(val, `"`),
+				})
+			}
+		case "global_group":
+			cfg.groups = append(cfg.groups, key)
 		}
 	}
 	if err := scanner.Err(); err != nil {

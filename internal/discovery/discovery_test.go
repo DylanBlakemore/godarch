@@ -124,6 +124,167 @@ func TestDiscoverClassifiesAndParses(t *testing.T) {
 	if p.Nodes["autoload:Disabled"].Identity["enabled"] != false {
 		t.Errorf("Disabled enabled = %v, want false", p.Nodes["autoload:Disabled"].Identity["enabled"])
 	}
+
+	// The main scene from application/run/main_scene is identified and the
+	// scene node carries the marker.
+	if p.MainScene != "res://main.tscn" {
+		t.Errorf("MainScene = %q, want res://main.tscn", p.MainScene)
+	}
+	if p.Nodes["res://main.tscn"].Identity["main_scene"] != true {
+		t.Errorf("main.tscn main_scene marker = %v, want true",
+			p.Nodes["res://main.tscn"].Identity["main_scene"])
+	}
+}
+
+// TestDiscoverFindsRootFromSubdir checks that Discover ascends to the directory
+// holding project.godot when handed a subdirectory of the project.
+func TestDiscoverFindsRootFromSubdir(t *testing.T) {
+	root := writeProject(t, map[string]string{
+		"project.godot":    sampleProjectGodot,
+		"main.tscn":        "[gd_scene format=3]\n",
+		"world/level.gd":   "extends Node\n",
+		"world/sub/x.tres": "[gd_resource]\n",
+	})
+
+	p, err := Discover(filepath.Join(root, "world", "sub"))
+	if err != nil {
+		t.Fatalf("Discover(subdir): %v", err)
+	}
+
+	for _, id := range []string{"res://main.tscn", "res://world/level.gd", "res://world/sub/x.tres"} {
+		if _, ok := p.Nodes[id]; !ok {
+			t.Errorf("missing node %q (root not resolved from subdir?)", id)
+		}
+	}
+}
+
+// TestDiscoverIgnoreGlobs checks that godarch.yml ignore globs prune files, on
+// top of the always-ignored .godot/.git dirs.
+func TestDiscoverIgnoreGlobs(t *testing.T) {
+	root := writeProject(t, map[string]string{
+		"project.godot":            sampleProjectGodot,
+		"godarch.yml":              "ignore:\n  - addons\n",
+		"main.tscn":                "[gd_scene format=3]\n",
+		"addons/plugin/tool.gd":    "extends Node\n",
+		".git/hooks/pre-commit.gd": "extends Node\n",
+	})
+
+	p, err := Discover(root)
+	if err != nil {
+		t.Fatalf("Discover: %v", err)
+	}
+
+	if _, ok := p.Nodes["res://addons/plugin/tool.gd"]; ok {
+		t.Errorf("addons file should have been ignored by godarch.yml glob")
+	}
+	if _, ok := p.Nodes["res://.git/hooks/pre-commit.gd"]; ok {
+		t.Errorf(".git file should always be ignored")
+	}
+	if _, ok := p.Nodes["res://main.tscn"]; !ok {
+		t.Errorf("main.tscn should still be discovered")
+	}
+}
+
+// TestDiscoverParsesLayersGroupsMainScene checks the project.godot sections that
+// milestone-01 discovery added: [layer_names], [global_group], and the main
+// scene marker.
+func TestDiscoverParsesLayersGroupsMainScene(t *testing.T) {
+	const godot = `config_version=5
+
+[application]
+
+run/main_scene="res://main.tscn"
+
+[layer_names]
+
+2d_physics/layer_1="Player"
+2d_physics/layer_2="Enemy"
+3d_render/layer_1="World"
+
+[global_group]
+
+enemies="The bad guys"
+`
+	root := writeProject(t, map[string]string{
+		"project.godot": godot,
+		"main.tscn":     "[gd_scene format=3]\n",
+	})
+
+	p, err := Discover(root)
+	if err != nil {
+		t.Fatalf("Discover: %v", err)
+	}
+
+	group := p.Nodes["group:enemies"]
+	if group == nil || group.Kind != model.KindGroup {
+		t.Fatalf("group:enemies node = %+v, want a group node", group)
+	}
+
+	l1 := p.Nodes["layer:1"]
+	if l1 == nil || l1.Kind != model.KindLayer {
+		t.Fatalf("layer:1 node = %+v, want a layer node", l1)
+	}
+	names, ok := l1.Identity["names"].(map[string]any)
+	if !ok {
+		t.Fatalf("layer:1 names = %v, want a category→name map", l1.Identity["names"])
+	}
+	if names["2d_physics"] != "Player" || names["3d_render"] != "World" {
+		t.Errorf("layer:1 names = %v, want {2d_physics:Player, 3d_render:World}", names)
+	}
+	if p.Nodes["layer:2"] == nil {
+		t.Errorf("missing layer:2 node")
+	}
+}
+
+// TestDiscoverBuildsUIDMap checks that uids declared in scene headers and in
+// .import sidecars are collected into Project.UIDMap.
+func TestDiscoverBuildsUIDMap(t *testing.T) {
+	root := writeProject(t, map[string]string{
+		"project.godot": "config_version=5\n",
+		"main.tscn":     "[gd_scene format=3 uid=\"uid://scene123\"]\n",
+		"art/icon.png":  "PNG",
+		"art/icon.png.import": "[remap]\n\nuid=\"uid://asset456\"\n\n" +
+			"[deps]\n\nsource_file=\"res://art/icon.png\"\n",
+	})
+
+	p, err := Discover(root)
+	if err != nil {
+		t.Fatalf("Discover: %v", err)
+	}
+
+	if got := p.UIDMap["uid://scene123"]; got != "res://main.tscn" {
+		t.Errorf("UIDMap[uid://scene123] = %q, want res://main.tscn", got)
+	}
+	if got := p.UIDMap["uid://asset456"]; got != "res://art/icon.png" {
+		t.Errorf("UIDMap[uid://asset456] = %q, want res://art/icon.png", got)
+	}
+}
+
+// TestDiscoverPairsImports checks that an asset with a .import sidecar records
+// the sidecar path on its node identity (the basis for the M1.02 imports edge).
+func TestDiscoverPairsImports(t *testing.T) {
+	root := writeProject(t, map[string]string{
+		"project.godot":       "config_version=5\n",
+		"art/icon.png":        "PNG",
+		"art/icon.png.import": "[remap]\n",
+	})
+
+	p, err := Discover(root)
+	if err != nil {
+		t.Fatalf("Discover: %v", err)
+	}
+
+	asset := p.Nodes["res://art/icon.png"]
+	if asset == nil {
+		t.Fatalf("missing asset node res://art/icon.png")
+	}
+	if asset.Identity["import"] != "res://art/icon.png.import" {
+		t.Errorf("asset import pairing = %v, want res://art/icon.png.import",
+			asset.Identity["import"])
+	}
+	if _, ok := p.Nodes["res://art/icon.png.import"]; ok {
+		t.Errorf(".import sidecar should not be a node")
+	}
 }
 
 func TestCounts(t *testing.T) {

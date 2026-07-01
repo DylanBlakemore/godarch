@@ -10,6 +10,7 @@ type Project struct {
 	Boundaries   []*BoundaryPoint  `json:"boundaries,omitempty"` //
 	Unresolved   []*Edge           `json:"unresolved,omitempty"` // edges whose TargetID never resolved
 	UIDMap       map[string]string `json:"uid_map,omitempty"`    // uid:// → res://
+	MainScene    string            `json:"main_scene,omitempty"` // res:// ID of application/run/main_scene
 	GodotVersion string            `json:"godot_version,omitempty"`
 }
 

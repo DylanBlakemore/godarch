@@ -53,12 +53,12 @@ A `model.Project` with: a node per file, per autoload, per action, per layer, pe
 
 ## Tasks
 
-- [ ] Project-root location + ignore-glob filtering.
-- [ ] File walker + classifier → file nodes (table above).
-- [ ] `project.godot` parsing → autoload/action/layer/group nodes + main-scene marker.
-- [ ] UID map: `.godot/uid_cache.bin` parse with header-scan fallback.
-- [ ] `.import`↔asset pairing recorded for the `imports` edge (emitted in 02).
-- [ ] Tests against `minimal/` (counts + the autoload/action/main-scene nodes exist).
+- [x] Project-root location + ignore-glob filtering.
+- [x] File walker + classifier → file nodes (table above).
+- [x] `project.godot` parsing → autoload/action/layer/group nodes + main-scene marker.
+- [x] UID map: `.godot/uid_cache.bin` parse with header-scan fallback.
+- [x] `.import`↔asset pairing recorded for the `imports` edge (emitted in 02).
+- [x] Tests against `minimal/` (counts + the autoload/action/main-scene nodes exist).
 
 ## Definition of done
 

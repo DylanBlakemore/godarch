@@ -35,8 +35,8 @@ GDScript symbol *resolution* across files is M2 — M1 extracts what each file d
 
 ## Master checklist
 
-- [ ] Discovery walks the project, classifies files, builds the UID↔path map (`01`)
-- [ ] `project.godot` parsed: autoloads, input map, layers, main scene, global groups (`01`)
+- [x] Discovery walks the project, classifies files, builds the UID↔path map (`01`)
+- [x] `project.godot` parsed: autoloads, input map, layers, main scene, global groups (`01`)
 - [ ] Scene/resource INI parser handles `.tscn`/`.tres`/`.import`/`plugin.cfg`/`.gdextension` (`02`)
 - [ ] Scene extractor emits: instances, attaches_script, connections, groups, exports, node-paths, asset refs (`02`)
 - [ ] tree-sitter-gdscript wired via cgo; grammar pinned (`03`)

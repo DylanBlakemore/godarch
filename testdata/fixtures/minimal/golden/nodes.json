@@ -18,7 +18,10 @@
   {
     "id": "res://art/icon.svg",
     "kind": "asset",
-    "path": "res://art/icon.svg"
+    "path": "res://art/icon.svg",
+    "identity": {
+      "import": "res://art/icon.svg.import"
+    }
   },
   {
     "id": "res://game_state.gd",
@@ -28,7 +31,10 @@
   {
     "id": "res://main.tscn",
     "kind": "scene",
-    "path": "res://main.tscn"
+    "path": "res://main.tscn",
+    "identity": {
+      "main_scene": true
+    }
   },
   {
     "id": "res://player.gd",
