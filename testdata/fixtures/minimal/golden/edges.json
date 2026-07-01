@@ -1,0 +1,47 @@
+[
+  {
+    "type": "imports",
+    "source_id": "res://art/icon.svg",
+    "target_id": "res://art/icon.svg.import",
+    "origin": "config",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://art/icon.svg.import"
+    },
+    "properties": {
+      "importer": "texture",
+      "type": "CompressedTexture2D"
+    }
+  },
+  {
+    "type": "attaches_script",
+    "source_id": "res://main.tscn::.",
+    "target_id": "res://player.gd",
+    "origin": "editor",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://main.tscn",
+      "line": 6
+    }
+  },
+  {
+    "type": "connects_signal",
+    "source_id": "res://main.tscn::Timer",
+    "target_id": "res://player.gd::_on_timer_timeout",
+    "origin": "editor",
+    "resolved": true,
+    "confidence": 1,
+    "evidence": {
+      "file": "res://main.tscn",
+      "line": 10
+    },
+    "properties": {
+      "from": "Timer",
+      "method": "_on_timer_timeout",
+      "signal": "timeout",
+      "to": "."
+    }
+  }
+]
