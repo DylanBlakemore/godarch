@@ -3,6 +3,7 @@ package scene_test
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/dylanblakemore/godarch/internal/extract/scene"
@@ -196,5 +197,41 @@ func TestExtractPluginCfg(t *testing.T) {
 	}
 	if n.Identity["editor_plugin"] != true {
 		t.Errorf("plugin script not flagged as editor_plugin: %+v", n.Identity)
+	}
+}
+
+// TestExtractBinarySceneEmitsDiagnostic verifies that a binary-format scene is
+// not silently skipped: the extractor records a diagnostic and emits no edges
+// from it, rather than dropping its instance/script/connection edges without a
+// trace (M1 exit criterion #3).
+func TestExtractBinarySceneEmitsDiagnostic(t *testing.T) {
+	dir := t.TempDir()
+	write := func(name, content string) {
+		if err := os.WriteFile(filepath.Join(dir, name), []byte(content), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	write("project.godot", "config_version=5\n")
+	// A Godot binary scene: "RSRC" magic followed by opaque bytes.
+	write("main.scn", "RSRC\x00\x00\x00\x00\x01\x02\x03\x04opaque")
+
+	p := discoverOrFail(t, dir)
+	diags, err := scene.Extract(dir, p)
+	if err != nil {
+		t.Fatalf("Extract: %v", err)
+	}
+
+	if len(p.Edges) != 0 {
+		t.Errorf("expected no edges from a binary scene, got %d: %+v", len(p.Edges), p.Edges)
+	}
+
+	var found bool
+	for _, d := range diags {
+		if d.File == "res://main.scn" && strings.Contains(d.Msg, "binary") {
+			found = true
+		}
+	}
+	if !found {
+		t.Errorf("expected a binary-format diagnostic for res://main.scn, got %+v", diags)
 	}
 }

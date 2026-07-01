@@ -86,3 +86,24 @@ func TestParseLenientBadValue(t *testing.T) {
 		t.Errorf("bad prop dropped instead of kept as raw")
 	}
 }
+
+func TestIsBinaryGodot(t *testing.T) {
+	tests := []struct {
+		name string
+		data string
+		want bool
+	}{
+		{"uncompressed magic", "RSRC\x00\x00\x00\x00binary junk", true},
+		{"compressed magic", "RSCC\x01\x02\x03\x04", true},
+		{"text scene header", sampleScene, false},
+		{"text resource header", "[gd_resource type=\"Resource\" format=3]\n", false},
+		{"empty", "", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := isBinaryGodot([]byte(tt.data)); got != tt.want {
+				t.Errorf("isBinaryGodot(%q) = %v, want %v", tt.name, got, tt.want)
+			}
+		})
+	}
+}
